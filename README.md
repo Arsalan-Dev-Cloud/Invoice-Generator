@@ -1456,3 +1456,7 @@ Chart.js
 ```
 
 This project was developed as a practical Python web application and can serve as a foundation for future Data Engineering and analytics work.
+<<<<<<< HEAD
+=======
+
+>>>>>>> f503c51fc46ec35069d7b9319e240446eecf77f9
