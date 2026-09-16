@@ -927,9 +927,6 @@ The following files should remain tracked:
 ```text
 app.py
 database.py
-invoice.py
-login.py
-signup.py
 pdf_generator.py
 static/
 templates/
