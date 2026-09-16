@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Invoice Dashboard</title>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+</head>
+
+<body>
+
+
+<div class="container">
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <h1>Invoice Dashboard</h1>
+
+        <p>Invoice and revenue overview</p>
+
+    </div>
+
+
+    <div class="invoice-card">
+
+        <!-- Overall Statistics -->
+
+        <h2>Statistics</h2>
+
+        <p>
+            <strong>Total Invoices:</strong>
+            {{ statistics["total_invoices"] }}
+        </p>
+
+        <p>
+            <strong>Total Revenue:</strong>
+            INR {{ "%.2f"|format(statistics["total_revenue"]) }}
+        </p>
+
+        <p>
+            <strong>Total GST:</strong>
+            INR {{ "%.2f"|format(statistics["total_gst"]) }}
+        </p>
+
+        <p>
+            <strong>Average Invoice:</strong>
+            INR {{ "%.2f"|format(statistics["average_invoice"]) }}
+        </p>
+
+
+        <!-- Monthly Statistics -->
+
+        <h2 class="details-title">
+            Monthly Statistics
+        </h2>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Month</th>
+                        <th>Invoices</th>
+                        <th>Revenue</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for row in monthly_statistics %}
+
+                    <tr>
+
+                        <td>
+                            {{ row[0] }}
+                        </td>
+
+                        <td>
+                            {{ row[1] }}
+                        </td>
+
+                        <td>
+                            INR {{ "%.2f"|format(row[2]) }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Monthly Revenue Chart -->
+
+        <h2 class="details-title">
+            Monthly Revenue
+        </h2>
+
+
+        <div
+            style="
+                width: 100%;
+                max-width: 800px;
+                margin: 20px auto;
+            "
+        >
+
+            <canvas id="revenueChart"></canvas>
+
+        </div>
+
+
+        <!-- Product Sales -->
+
+        <h2 class="details-title">
+            Product Sales
+        </h2>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Product</th>
+                        <th>Units Sold</th>
+                        <th>Revenue</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for row in product_statistics %}
+
+                    <tr>
+
+                        <td>
+                            {{ row[0] }}
+                        </td>
+
+                        <td>
+                            {{ row[1] }}
+                        </td>
+
+                        <td>
+                            INR {{ "%.2f"|format(row[2]) }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <h2 class="details-title">
+            Product Revenue
+        </h2>
+
+        <div
+            style="
+                width: 100%;
+                max-width: 800px;
+                margin: 20px auto;
+            "
+        >
+
+            <canvas id="productChart"></canvas>
+
+        </div>
+
+
+        <!-- Navigation -->
+
+        <a
+            href="/history"
+            class="back-btn"
+        >
+            ← Invoice History
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- Monthly Data for JavaScript -->
+
+<script
+    type="application/json"
+    id="monthly-data"
+>
+    {{ monthly_statistics | default([], true) | tojson | safe }}
+</script>
+
+<!-- Product Data for JavaScript -->
+
+<script
+    type="application/json"
+    id="product-data"
+>
+    {{ product_statistics | default([], true) | tojson | safe }}
+</script>
+
+
+<!-- Revenue Chart -->
+
+<script>
+
+    const monthlyData = JSON.parse(
+        document.getElementById("monthly-data").textContent || "[]"
+    );
+
+
+    const months = Array.isArray(monthlyData)
+        ? monthlyData.map(row => row[0])
+        : [];
+
+
+    const revenue = Array.isArray(monthlyData)
+        ? monthlyData.map(row => Number(row[2]) || 0)
+        : [];
+
+
+    const chartElement = document.getElementById(
+        "revenueChart"
+    );
+
+
+    if (chartElement) {
+
+        const ctx = chartElement.getContext("2d");
+
+
+        new Chart(ctx, {
+
+            type: "bar",
+
+            data: {
+
+                labels: months,
+
+                datasets: [{
+
+                    label: "Monthly Revenue (INR)",
+
+                    data: revenue
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true
+
+                    }
+
+                }
+
+            }
+
+        });
+
+    }
+
+</script>
+
+</script>
+
+
+<!-- Product Chart -->
+
+<script>
+
+    const productData = JSON.parse(
+        document.getElementById("product-data").textContent || "[]"
+    );
+
+
+    const products = Array.isArray(productData)
+        ? productData.map(row => row[0])
+        : [];
+
+
+    const productRevenue = Array.isArray(productData)
+        ? productData.map(row => Number(row[2]) || 0)
+        : [];
+
+
+    const productChartElement = document.getElementById(
+        "productChart"
+    );
+
+
+    if (productChartElement) {
+
+        const productCtx = productChartElement.getContext("2d");
+
+
+        new Chart(productCtx, {
+
+            type: "bar",
+
+            data: {
+
+                labels: products,
+
+                datasets: [{
+
+                    label: "Product Revenue (INR)",
+
+                    data: productRevenue
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                indexAxis: "y",
+
+                scales: {
+
+                    x: {
+
+                        beginAtZero: true
+
+                    }
+
+                }
+
+            }
+
+        });
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

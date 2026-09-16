@@ -1,0 +1,327 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 32px;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.header p {
+    color: #666;
+}
+
+.invoice-card {
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.invoice-card h2 {
+    margin-bottom: 25px;
+    color: #222;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+    color: #444;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #333;
+}
+
+.generate-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.generate-btn:hover {
+    background: #444;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 25px;
+    color: #777;
+    font-size: 14px;
+}
+.items-title {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+.item-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 15px;
+    align-items: end;
+}
+
+@media (max-width: 600px) {
+
+    .item-row {
+        grid-template-columns: 1fr;
+    }
+
+}
+.add-item-btn {
+    padding: 10px 18px;
+    border: 1px solid #222;
+    border-radius: 6px;
+    background: white;
+    color: #222;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.add-item-btn:hover {
+    background: #f0f0f0;
+}
+.delete-item-btn {
+    height: 42px;
+    padding: 10px 15px;
+    border: 1px solid #d33;
+    border-radius: 6px;
+    background: white;
+    color: #d33;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 18px;
+}
+
+.delete-item-btn:hover {
+    background: #d33;
+    color: white;
+}
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+th {
+    background: #f4f4f4;
+    font-weight: bold;
+}
+
+tr:hover {
+    background: #f9f9f9;
+}
+
+.no-invoices {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+.back-btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 10px 18px;
+    border: 1px solid #222;
+    border-radius: 6px;
+    background: white;
+    color: #222;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-btn:hover {
+    background: #222;
+    color: white;
+}
+.history-btn {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    margin-top: 12px;
+
+    border: 1px solid #222;
+    border-radius: 6px;
+
+    background: white;
+    color: #222;
+
+    text-align: center;
+    text-decoration: none;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.history-btn:hover {
+    background: #222;
+    color: white;
+}
+.details-section {
+    margin-bottom: 25px;
+}
+
+.details-section p {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.details-title {
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+.invoice-summary {
+    margin-top: 25px;
+    margin-left: auto;
+    max-width: 300px;
+}
+
+.invoice-summary p {
+    margin-bottom: 10px;
+    text-align: right;
+}
+
+.grand-total {
+    font-size: 18px;
+    padding-top: 10px;
+    border-top: 2px solid #222;
+}
+.view-btn {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 5px;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.view-btn:hover {
+    background: #444;
+}
+.download-btn {
+    display: inline-block;
+    margin-top: 25px;
+    margin-right: 10px;
+    padding: 10px 18px;
+    border: 1px solid #222;
+    border-radius: 6px;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.download-btn:hover {
+    background: #444;
+}
+.delete-invoice-btn {
+    display: inline-block;
+    padding: 8px 12px;
+    margin-left: 5px;
+    border: 1px solid #d33;
+    border-radius: 5px;
+    background: white;
+    color: #d33;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.delete-invoice-btn:hover {
+    background: #d33;
+    color: white;
+}
+.details-actions {
+    margin-top: 25px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.details-actions .back-btn,
+.details-actions .download-btn {
+    margin-top: 0;
+}
+.dashboard-btn {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    margin-top: 12px;
+    border: 1px solid #222;
+    border-radius: 6px;
+    background: white;
+    color: #222;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.dashboard-btn:hover {
+    background: #222;
+    color: white;
+}

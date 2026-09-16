@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Invoice History</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+
+            <h1>Invoice History</h1>
+
+            <p>View all previously generated invoices</p>
+
+        </div>
+
+
+        <div class="invoice-card">
+
+            {% if invoices %}
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Invoice No.</th>
+
+                            <th>Customer</th>
+
+                            <th>Email</th>
+
+                            <th>Date</th>
+
+                            <th>Subtotal</th>
+
+                            <th>GST</th>
+
+                            <th>Grand Total</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for invoice in invoices %}
+
+                        <tr>
+
+                            <td>
+                                {{ invoice["invoice_number"] }}
+                            </td>
+
+                            <td>
+                                {{ invoice["customer_name"] }}
+                            </td>
+
+                            <td>
+                                {{ invoice["customer_email"] }}
+                            </td>
+
+                            <td>
+                                {{ invoice["invoice_date"] }}
+                            </td>
+
+                            <td>
+                                INR {{ "%.2f"|format(invoice["subtotal"]) }}
+                            </td>
+
+                            <td>
+                                INR {{ "%.2f"|format(invoice["gst"]) }}
+                            </td>
+
+                            <td>
+                                <strong>
+                                    INR {{ "%.2f"|format(invoice["grand_total"]) }}
+                                </strong>
+                            </td>
+                            
+                            <td>
+
+                                <a
+                                    href="/invoice/{{ invoice['id'] }}"
+                                    class="view-btn"
+                                >
+                                    View Details
+                                </a>
+
+                                <form
+                                    action="/invoice/{{ invoice['id'] }}/delete"
+                                    method="POST"
+                                    style="display: inline;"
+                                    onsubmit="return confirm('Are you sure you want to delete this invoice?');"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="delete-invoice-btn"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <p class="no-invoices">
+                No invoices found.
+            </p>
+
+            {% endif %}
+
+            <a href="/dashboard" class="dashboard-btn">
+                📊 Dashboard
+            </a>
+            
+            <a href="/" class="back-btn">
+                ← Create New Invoice
+            </a>
+
+        </div>
+
+
+        <div class="footer">
+
+            <p>
+                Invoice Generator • Built with Python & Flask
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
