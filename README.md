@@ -916,6 +916,10 @@ invoices/
 
 # Local invoice counter
 invoice_counter.txt
+
+# remaining files
+login.py
+signup.py
 ```
 
 The following files should remain tracked:
