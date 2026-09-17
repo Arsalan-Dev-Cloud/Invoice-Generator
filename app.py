@@ -52,6 +52,10 @@ def home():
 @app.route("/generate", methods=["POST"])
 def generate_invoice():
 
+    if "user_id" not in session:
+
+        return redirect("/login")
+
     # -----------------------------
     # Customer Information
     # -----------------------------
@@ -191,6 +195,10 @@ def generate_invoice():
 @app.route("/history")
 def invoice_history():
 
+    if "user_id" not in session:
+
+        return redirect("/login")
+
     invoices = get_all_invoices()
 
     return render_template(
@@ -202,6 +210,10 @@ def invoice_history():
 @app.route("/invoice/<int:invoice_id>")
 def invoice_details(invoice_id):
 
+    if "user_id" not in session:
+
+        return redirect("/login")
+
     invoice, items = get_invoice_details(invoice_id)
 
     return render_template(
@@ -212,6 +224,10 @@ def invoice_details(invoice_id):
 
 @app.route("/invoice/<int:invoice_id>/download")
 def download_invoice(invoice_id):
+
+    if "user_id" not in session:
+
+        return redirect("/login")
 
     invoice, items = get_invoice_details(invoice_id)
 
@@ -227,6 +243,10 @@ def download_invoice(invoice_id):
 @app.route("/invoice/<int:invoice_id>/delete", methods=["POST"])
 def delete_invoice_route(invoice_id):
 
+    if "user_id" not in session:
+
+        return redirect("/login")
+
     invoice, items = get_invoice_details(invoice_id)
 
     if invoice:
@@ -239,6 +259,7 @@ def delete_invoice_route(invoice_id):
         )
 
         if os.path.exists(file_path):
+
             os.remove(file_path)
 
         delete_invoice(invoice_id)
@@ -247,6 +268,10 @@ def delete_invoice_route(invoice_id):
 
 @app.route("/dashboard")
 def dashboard():
+
+    if "user_id" not in session:
+
+        return redirect("/login")
 
     statistics = get_invoice_statistics()
 
