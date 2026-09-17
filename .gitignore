@@ -13,7 +13,3 @@ invoices/
 
 # Invoice counter
 invoice_counter.txt
-
-#logs file
-login.py
-signup.py
