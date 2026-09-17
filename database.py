@@ -55,6 +55,21 @@ def create_database():
         )
     """)
 
+        # Users table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            name TEXT NOT NULL,
+
+            email TEXT UNIQUE NOT NULL,
+
+            password TEXT NOT NULL
+
+        )
+    """)
+
     connection.commit()
 
     connection.close()
@@ -286,6 +301,45 @@ def get_product_statistics():
     connection.close()
 
     return results
+
+def create_user(name, email, password):
+
+    connection = sqlite3.connect(DATABASE_NAME)
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        INSERT INTO users (name, email, password)
+        VALUES (?, ?, ?)
+    """, (
+        name,
+        email,
+        password
+    ))
+
+    connection.commit()
+
+    connection.close()
+
+def get_user_by_email(email):
+
+    connection = sqlite3.connect(DATABASE_NAME)
+
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM users
+        WHERE email = ?
+    """, (email,))
+
+    user = cursor.fetchone()
+
+    connection.close()
+
+    return user
 
 if __name__ == "__main__":
     create_database()
