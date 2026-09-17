@@ -164,27 +164,17 @@ def generate_invoice():
 
 
     save_invoice(
-
+        session["user_id"],
         invoice_number,
-
         customer_name,
-
         customer_email,
-
         invoice_date,
-
         subtotal,
-
         gst_amount,
-
         final_total,
-
         product_names,
-
         quantities,
-
         prices
-
     )
 
 
