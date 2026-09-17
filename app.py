@@ -270,9 +270,17 @@ def dashboard():
     if "user_id" not in session:
         return redirect("/login")
 
-    statistics = get_invoice_statistics()
-    monthly_statistics = get_monthly_statistics()
-    product_statistics = get_product_statistics()
+    statistics = get_invoice_statistics(
+    session["user_id"]
+    )
+
+    monthly_statistics = get_monthly_statistics(
+        session["user_id"]
+    )
+
+    product_statistics = get_product_statistics(
+        session["user_id"]
+    )
 
     return render_template(
         "dashboard.html",
