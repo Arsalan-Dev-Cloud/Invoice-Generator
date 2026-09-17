@@ -249,23 +249,37 @@ def get_invoice_details(invoice_id, user_id):
 
     return invoice, items
 
-def delete_invoice(invoice_id):
+def delete_invoice(invoice_id, user_id):
 
     connection = sqlite3.connect(DATABASE_NAME)
 
     cursor = connection.cursor()
 
-    # Delete invoice items
+    # Delete invoice items only if invoice belongs to this user
     cursor.execute("""
         DELETE FROM invoice_items
         WHERE invoice_id = ?
-    """, (invoice_id,))
+        AND invoice_id IN (
+            SELECT id
+            FROM invoices
+            WHERE id = ?
+            AND user_id = ?
+        )
+    """, (
+        invoice_id,
+        invoice_id,
+        user_id
+    ))
 
-    # Delete invoice
+    # Delete invoice only if it belongs to this user
     cursor.execute("""
         DELETE FROM invoices
         WHERE id = ?
-    """, (invoice_id,))
+        AND user_id = ?
+    """, (
+        invoice_id,
+        user_id
+    ))
 
     connection.commit()
 

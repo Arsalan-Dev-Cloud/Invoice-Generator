@@ -271,7 +271,10 @@ def delete_invoice_route(invoice_id):
         if os.path.exists(file_path):
             os.remove(file_path)
 
-        delete_invoice(invoice_id)
+        delete_invoice(
+            invoice_id,
+            session["user_id"]
+        )
 
     return redirect("/history")
 
