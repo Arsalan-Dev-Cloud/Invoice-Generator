@@ -10,11 +10,13 @@ def create_database():
 
     cursor = connection.cursor()
 
-    # Invoice table
+        # Invoice table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS invoices (
 
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            user_id INTEGER,
 
             invoice_number TEXT UNIQUE,
 
@@ -28,7 +30,10 @@ def create_database():
 
             gst REAL NOT NULL,
 
-            grand_total REAL NOT NULL
+            grand_total REAL NOT NULL,
+
+            FOREIGN KEY (user_id)
+                REFERENCES users(id)
 
         )
     """)
@@ -82,11 +87,28 @@ def create_database():
         )
     """)
 
+        # Add user_id column to existing invoices table
+    cursor.execute("""
+        PRAGMA table_info(invoices)
+    """)
+
+    columns = cursor.fetchall()
+
+    column_names = [column[1] for column in columns]
+
+    if "user_id" not in column_names:
+
+        cursor.execute("""
+            ALTER TABLE invoices
+            ADD COLUMN user_id INTEGER
+        """)
+
     connection.commit()
 
     connection.close()
 
 def save_invoice(
+    user_id,
     invoice_number,
     customer_name,
     customer_email,
@@ -106,6 +128,7 @@ def save_invoice(
     # Save invoice information
     cursor.execute("""
         INSERT INTO invoices (
+            user_id,
             invoice_number,
             customer_name,
             customer_email,
@@ -114,8 +137,9 @@ def save_invoice(
             gst,
             grand_total
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """, (
+        user_id,
         invoice_number,
         customer_name,
         customer_email,
