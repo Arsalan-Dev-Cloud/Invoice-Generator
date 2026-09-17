@@ -1,5 +1,6 @@
 from flask import request, render_template, redirect, flash
 from werkzeug.security import generate_password_hash
+
 from database import (
     get_user_by_email,
     create_password_reset_token,
@@ -9,7 +10,52 @@ from database import (
 )
 
 import secrets
+import os
+import smtplib
+
 from datetime import datetime, timedelta
+from email.message import EmailMessage
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
+
+def send_reset_email(email, reset_link):
+
+    message = EmailMessage()
+
+    message["Subject"] = "Invoice Generator - Password Reset"
+    message["From"] = os.getenv("MAIL_USERNAME")
+    message["To"] = email
+
+    message.set_content(f"""
+Hello,
+
+You requested a password reset for your Invoice Generator account.
+
+Click the link below to reset your password:
+
+{reset_link}
+
+This link will expire in 15 minutes.
+
+If you did not request this password reset, you can safely ignore this email.
+
+Regards,
+Invoice Generator
+""")
+
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+
+        server.starttls()
+
+        server.login(
+            os.getenv("MAIL_USERNAME"),
+            os.getenv("MAIL_PASSWORD")
+        )
+
+        server.send_message(message)
 
 
 def forgot_password():
@@ -37,14 +83,17 @@ def forgot_password():
                 expires_at.isoformat()
             )
 
-            # For local testing
-            reset_link = f"http://127.0.0.1:5000/reset-password/{token}"
+            # Generate reset link
+            reset_link = (
+                f"http://127.0.0.1:5000/"
+                f"reset-password/{token}"
+            )
 
-            print("\n===================================")
-            print("PASSWORD RESET LINK")
-            print("===================================")
-            print(reset_link)
-            print("===================================\n")
+            # Send reset email
+            send_reset_email(
+                email,
+                reset_link
+            )
 
         flash(
             "If an account exists with this email, "
