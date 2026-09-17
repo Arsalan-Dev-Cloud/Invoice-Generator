@@ -70,6 +70,18 @@ def create_database():
         )
     """)
 
+        # Password reset tokens table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS password_reset_tokens (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            token TEXT UNIQUE NOT NULL,
+            expires_at TEXT NOT NULL,
+            used INTEGER DEFAULT 0,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
+
     connection.commit()
 
     connection.close()
@@ -340,6 +352,75 @@ def get_user_by_email(email):
     connection.close()
 
     return user
+
+def create_password_reset_token(user_id, token, expires_at):
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        INSERT INTO password_reset_tokens (
+            user_id,
+            token,
+            expires_at
+        )
+        VALUES (?, ?, ?)
+    """, (
+        user_id,
+        token,
+        expires_at
+    ))
+
+    connection.commit()
+    connection.close()
+
+
+def get_password_reset_token(token):
+    connection = sqlite3.connect(DATABASE_NAME)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM password_reset_tokens
+        WHERE token = ?
+    """, (token,))
+
+    reset_token = cursor.fetchone()
+
+    connection.close()
+
+    return reset_token
+
+
+def mark_reset_token_used(token):
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        UPDATE password_reset_tokens
+        SET used = 1
+        WHERE token = ?
+    """, (token,))
+
+    connection.commit()
+    connection.close()
+
+
+def update_user_password(user_id, hashed_password):
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        UPDATE users
+        SET password = ?
+        WHERE id = ?
+    """, (
+        hashed_password,
+        user_id
+    ))
+
+    connection.commit()
+    connection.close()
 
 if __name__ == "__main__":
     create_database()
