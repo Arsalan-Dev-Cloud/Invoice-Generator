@@ -17,6 +17,37 @@
 >
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: white;
+    padding: 20px 25px;
+    border-radius: 10px;
+
+    margin-bottom: 25px;
+}
+
+.user-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.logout-button {
+    padding: 10px 18px;
+    background: #dc3545;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.logout-button:hover {
+    background: #b02a37;
+}
+</style>
 
 
 </head>
@@ -29,6 +60,18 @@
     <!-- Header -->
 
     <div class="header">
+
+        <div class="user-header">
+
+            <h2>
+                Welcome, {{ user_name }} 👋
+            </h2>
+
+            <a href="/logout" class="logout-button">
+                Logout
+            </a>
+
+        </div>
 
         <h1>Invoice Dashboard</h1>
 

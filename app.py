@@ -268,20 +268,18 @@ def delete_invoice_route(invoice_id):
 def dashboard():
 
     if "user_id" not in session:
-
         return redirect("/login")
 
     statistics = get_invoice_statistics()
-
     monthly_statistics = get_monthly_statistics()
-
     product_statistics = get_product_statistics()
 
     return render_template(
         "dashboard.html",
         statistics=statistics,
         monthly_statistics=monthly_statistics,
-        product_statistics=product_statistics
+        product_statistics=product_statistics,
+        user_name=session["user_name"]
     )
 
 if __name__ == "__main__":
