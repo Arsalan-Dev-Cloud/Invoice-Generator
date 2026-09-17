@@ -15,7 +15,7 @@ from database import (
 from datetime import datetime
 from signup import signup
 from login import login
-
+from forgot_password import forgot_password, reset_password
 
 app = Flask(__name__)
 
@@ -34,6 +34,14 @@ def login_route():
 
     return login()
 
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password_route():
+    return forgot_password()
+
+
+@app.route("/reset-password/<token>", methods=["GET", "POST"])
+def reset_password_route(token):
+    return reset_password(token)
 
 @app.route("/logout")
 def logout():
