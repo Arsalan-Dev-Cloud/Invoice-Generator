@@ -184,7 +184,7 @@ def save_invoice(
 
     print("Invoice saved to database!")
 
-def get_all_invoices():
+def get_all_invoices(user_id):
 
     connection = sqlite3.connect(DATABASE_NAME)
 
@@ -203,8 +203,9 @@ def get_all_invoices():
             gst,
             grand_total
         FROM invoices
+        WHERE user_id = ?
         ORDER BY id DESC
-    """)
+    """, (user_id,))
 
     invoices = cursor.fetchall()
 
