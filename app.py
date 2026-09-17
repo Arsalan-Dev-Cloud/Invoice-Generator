@@ -197,7 +197,7 @@ def invoice_history():
 
         return redirect("/login")
 
-    invoices = get_all_invoices()
+    invoices = get_all_invoices(session["user_id"])
 
     return render_template(
         "history.html",

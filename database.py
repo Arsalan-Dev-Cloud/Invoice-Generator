@@ -268,7 +268,7 @@ def delete_invoice(invoice_id):
 
     print("Invoice deleted successfully!")
 
-def get_invoice_statistics():
+def get_invoice_statistics(user_id):
 
     connection = sqlite3.connect(DATABASE_NAME)
 
@@ -281,7 +281,8 @@ def get_invoice_statistics():
             COALESCE(SUM(gst), 0),
             COALESCE(AVG(grand_total), 0)
         FROM invoices
-    """)
+        WHERE user_id = ?
+    """, (user_id,))
 
     result = cursor.fetchone()
 
@@ -294,7 +295,7 @@ def get_invoice_statistics():
         "average_invoice": result[3]
     }
 
-def get_monthly_statistics():
+def get_monthly_statistics(user_id):
 
     connection = sqlite3.connect(DATABASE_NAME)
 
@@ -306,10 +307,11 @@ def get_monthly_statistics():
             COUNT(*) AS invoice_count,
             SUM(grand_total) AS revenue
         FROM invoices
+        WHERE user_id = ?
         GROUP BY substr(invoice_date, 4, 7)
         ORDER BY substr(invoice_date, 7, 4),
                  substr(invoice_date, 4, 2)
-    """)
+    """, (user_id,))
 
     results = cursor.fetchall()
 
@@ -317,7 +319,7 @@ def get_monthly_statistics():
 
     return results
 
-def get_product_statistics():
+def get_product_statistics(user_id):
 
     connection = sqlite3.connect(DATABASE_NAME)
 
@@ -325,13 +327,16 @@ def get_product_statistics():
 
     cursor.execute("""
         SELECT
-            product_name,
-            SUM(quantity) AS total_quantity,
-            SUM(total) AS total_revenue
+            invoice_items.product_name,
+            SUM(invoice_items.quantity) AS total_quantity,
+            SUM(invoice_items.total) AS total_revenue
         FROM invoice_items
-        GROUP BY product_name
+        INNER JOIN invoices
+            ON invoice_items.invoice_id = invoices.id
+        WHERE invoices.user_id = ?
+        GROUP BY invoice_items.product_name
         ORDER BY total_quantity DESC
-    """)
+    """, (user_id,))
 
     results = cursor.fetchall()
 
