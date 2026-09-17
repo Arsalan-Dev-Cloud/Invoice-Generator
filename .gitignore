@@ -13,3 +13,5 @@ invoices/
 
 # Invoice counter
 invoice_counter.txt
+
+.env

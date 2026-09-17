@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, render_template, request, send_file, redirect, session
+from dotenv import load_dotenv
 from pdf_generator import create_invoice_pdf
 from database import (
     create_database,
@@ -17,9 +18,11 @@ from signup import signup
 from login import login
 from forgot_password import forgot_password, reset_password
 
+load_dotenv()
+
 app = Flask(__name__)
 
-app.secret_key = "change-this-secret-key"
+app.secret_key = os.getenv("SECRET_KEY")
 
 create_database()
 
