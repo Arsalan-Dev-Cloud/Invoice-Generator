@@ -213,7 +213,7 @@ def get_all_invoices(user_id):
 
     return invoices
 
-def get_invoice_details(invoice_id):
+def get_invoice_details(invoice_id, user_id):
 
     connection = sqlite3.connect(DATABASE_NAME)
 
@@ -226,10 +226,15 @@ def get_invoice_details(invoice_id):
         SELECT *
         FROM invoices
         WHERE id = ?
-    """, (invoice_id,))
+        AND user_id = ?
+    """, (invoice_id, user_id))
 
     invoice = cursor.fetchone()
 
+    # If invoice does not belong to this user
+    if invoice is None:
+        connection.close()
+        return None, []
 
     # Get items belonging to this invoice
     cursor.execute("""
