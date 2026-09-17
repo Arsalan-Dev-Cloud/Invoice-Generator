@@ -1,8 +1,9 @@
 import os
 
-from flask import Flask, render_template, request, send_file, redirect
+from flask import Flask, render_template, request, send_file, redirect, session
 from pdf_generator import create_invoice_pdf
 from database import (
+    create_database,
     save_invoice,
     get_all_invoices,
     get_invoice_details,
@@ -12,9 +13,34 @@ from database import (
     get_product_statistics
 )
 from datetime import datetime
+from signup import signup
+from login import login
 
 
 app = Flask(__name__)
+
+app.secret_key = "change-this-secret-key"
+
+create_database()
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup_route():
+
+    return signup()
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login_route():
+
+    return login()
+
+
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect("/login")
 
 
 @app.route("/")

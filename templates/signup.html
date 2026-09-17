@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Signup - Invoice Generator</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f4f6f8;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+        .signup-container {
+
+            width: 400px;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+
+            text-align: center;
+
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #666;
+
+            margin-bottom: 25px;
+        }
+
+        label {
+
+            display: block;
+
+            margin-bottom: 6px;
+
+            font-weight: bold;
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 12px;
+
+            margin-bottom: 18px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+        input:focus {
+
+            outline: none;
+
+            border-color: #007bff;
+        }
+
+        button {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background: #007bff;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+
+            background: #0056b3;
+        }
+
+        .login-link {
+
+            text-align: center;
+
+            margin-top: 20px;
+        }
+
+        .login-link a {
+
+            color: #007bff;
+
+            text-decoration: none;
+        }
+
+        .message {
+
+            background: #ffe6e6;
+
+            color: #cc0000;
+
+            padding: 10px;
+
+            border-radius: 5px;
+
+            margin-bottom: 15px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="signup-container">
+
+        <h1>Create Account</h1>
+
+        <p class="subtitle">
+            Create your Invoice Generator account
+        </p>
+
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="message">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <form method="POST" action="/signup">
+
+            <label for="name">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your name"
+                required
+            >
+
+
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
+
+
+            <label for="confirm_password">
+                Confirm Password
+            </label>
+
+            <input
+                type="password"
+                id="confirm_password"
+                name="confirm_password"
+                placeholder="Confirm your password"
+                required
+            >
+
+
+            <button type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+
+        <div class="login-link">
+
+            Already have an account?
+
+            <a href="/login">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
