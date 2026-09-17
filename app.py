@@ -209,10 +209,15 @@ def invoice_history():
 def invoice_details(invoice_id):
 
     if "user_id" not in session:
-
         return redirect("/login")
 
-    invoice, items = get_invoice_details(invoice_id)
+    invoice, items = get_invoice_details(
+        invoice_id,
+        session["user_id"]
+    )
+
+    if invoice is None:
+        return redirect("/history")
 
     return render_template(
         "invoice_details.html",
@@ -224,10 +229,15 @@ def invoice_details(invoice_id):
 def download_invoice(invoice_id):
 
     if "user_id" not in session:
-
         return redirect("/login")
 
-    invoice, items = get_invoice_details(invoice_id)
+    invoice, items = get_invoice_details(
+        invoice_id,
+        session["user_id"]
+    )
+
+    if invoice is None:
+        return redirect("/history")
 
     invoice_number = invoice["invoice_number"]
 
@@ -242,10 +252,12 @@ def download_invoice(invoice_id):
 def delete_invoice_route(invoice_id):
 
     if "user_id" not in session:
-
         return redirect("/login")
 
-    invoice, items = get_invoice_details(invoice_id)
+    invoice, items = get_invoice_details(
+        invoice_id,
+        session["user_id"]
+    )
 
     if invoice:
 
@@ -257,7 +269,6 @@ def delete_invoice_route(invoice_id):
         )
 
         if os.path.exists(file_path):
-
             os.remove(file_path)
 
         delete_invoice(invoice_id)
