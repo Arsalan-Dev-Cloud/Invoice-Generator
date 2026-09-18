@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="container admin-container">
+
+        <!-- Header -->
+
+        <div class="header">
+
+            <h1>Admin Dashboard</h1>
+
+            <p>
+                Manage users, invoices and application activity
+            </p>
+
+        </div>
+
+
+        <!-- Admin Information -->
+
+        <div class="invoice-card">
+
+            <h2>Welcome, {{ user_name }} 👋</h2>
+
+            <p>
+                You are logged in as an administrator.
+            </p>
+
+        </div>
+
+
+        <!-- Statistics -->
+
+        <div class="admin-stats">
+
+            <div class="admin-stat-card">
+
+                <h3>Total Users</h3>
+
+                <p>
+                    {{ total_users }}
+                </p>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <h3>Total Invoices</h3>
+
+                <p>
+                    {{ total_invoices }}
+                </p>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <h3>Total Revenue</h3>
+
+                <p>
+                    INR {{ "%.2f"|format(total_revenue) }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Admin Actions -->
+
+        <div class="invoice-card">
+
+            <h2>Admin Actions</h2>
+
+            <div class="admin-actions">
+
+                <a href="/dashboard" class="back-btn">
+                    User Dashboard
+                </a>
+
+                <a href="/history" class="back-btn">
+                    Invoice History
+                </a>
+
+                <a href="/logout" class="logout-button">
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Users Management -->
+
+        <div class="invoice-card">
+
+            <h2>Users Management</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Invoices</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for user in users %}
+
+                        <tr>
+
+                            <td>
+                                {{ user["id"] }}
+                            </td>
+
+                            <td>
+                                {{ user["name"] }}
+                            </td>
+
+                            <td>
+                                {{ user["email"] }}
+                            </td>
+
+                            <td>
+                                {{ user["role"] }}
+                            </td>
+
+                            <td>
+                                {{ user["invoice_count"] }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- Invoice Management -->
+
+        <div class="invoice-card">
+
+            <h2>Invoice Management</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Invoice</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Created By</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for invoice in invoices %}
+
+                        <tr>
+
+                            <td>
+                                {{ invoice["invoice_number"] }}
+                            </td>
+
+                            <td>
+                                {{ invoice["customer_name"] }}
+                            </td>
+
+                            <td>
+                                {{ invoice["invoice_date"] }}
+                            </td>
+
+                            <td>
+                                INR {{ "%.2f"|format(invoice["grand_total"]) }}
+                            </td>
+
+                            <td>
+                                {{ invoice["user_name"] }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- Recent Activity -->
+
+        <div class="invoice-card">
+
+            <h2>Recent Activity</h2>
+
+            {% if recent_invoices %}
+
+                {% for invoice in recent_invoices %}
+
+                <div class="recent-activity">
+
+                    <div class="recent-activity-info">
+
+                        <strong>
+                            Invoice {{ invoice["invoice_number"] }}
+                        </strong>
+
+                        <p>
+                            Customer:
+                            {{ invoice["customer_name"] }}
+                        </p>
+
+                        <p>
+                            Created by:
+                            {{ invoice["user_name"] }}
+                        </p>
+
+                    </div>
+
+                    <div class="recent-activity-amount">
+
+                        <strong>
+                            INR {{ "%.2f"|format(invoice["grand_total"]) }}
+                        </strong>
+
+                        <p>
+                            {{ invoice["invoice_date"] }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>
+                    No recent activity.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- Footer -->
+
+        <div class="footer">
+
+            <p>
+                Invoice Generator • Admin Panel
+            </p>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
