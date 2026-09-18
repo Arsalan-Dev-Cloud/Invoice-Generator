@@ -62,7 +62,7 @@ def logout():
 
     flash("You have been logged out successfully.")
 
-    return redirect("/login")
+    return redirect("/")
 
 
 @app.route("/")
