@@ -84,8 +84,10 @@ def forgot_password():
             )
 
             # Generate reset link
+            base_url = os.getenv("BASE_URL")
+
             reset_link = (
-                f"http://127.0.0.1:5000/"
+                f"{base_url}/"
                 f"reset-password/{token}"
             )
 
