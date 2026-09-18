@@ -1,0 +1,165 @@
+{% extends "dashboard_layout.html" %}
+
+{% block title %}
+Account Settings - Invoice Generator
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Account Settings
+        </h1>
+
+        <p>
+            Manage your account information and security
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================
+     Profile Information
+     ===================================== -->
+
+<div class="dashboard-card">
+
+    <h2>
+        Profile Information
+    </h2>
+
+    <p>
+        Update your personal information.
+    </p>
+
+
+    <form method="POST">
+
+        <div class="form-group">
+
+            <label for="name">
+                Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value="{{ user['name'] }}"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                value="{{ user['email'] }}"
+                disabled
+            >
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="back-btn"
+        >
+            Save Changes
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- =====================================
+     Password
+     ===================================== -->
+
+<div class="dashboard-card">
+
+    <h2>
+        Password
+    </h2>
+
+    <p>
+        Change your account password.
+    </p>
+
+    <a
+        href="/change-password"
+        class="quick-action-button"
+    >
+        🔐 Change Password
+    </a>
+
+</div>
+
+
+<!-- =====================================
+     Account Information
+     ===================================== -->
+
+<div class="dashboard-card">
+
+    <h2>
+        Account Information
+    </h2>
+
+    <p>
+        Account Type:
+        <strong>
+            {{ user['role']|capitalize }}
+        </strong>
+    </p>
+
+    <p>
+        Email:
+        <strong>
+            {{ user['email'] }}
+        </strong>
+    </p>
+
+</div>
+
+
+<!-- =====================================
+     Danger Zone
+     ===================================== -->
+
+<div class="dashboard-card account-danger-zone">
+
+    <h2>
+        Danger Zone
+    </h2>
+
+    <p>
+        Permanently delete your account and
+        all associated invoices.
+    </p>
+
+    <a
+        href="/delete-account"
+        class="delete-btn"
+    >
+        Delete My Account
+    </a>
+
+</div>
+
+
+{% endblock %}
