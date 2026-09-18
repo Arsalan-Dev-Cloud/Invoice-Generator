@@ -1,5 +1,6 @@
 import os
 
+from werkzeug.security import check_password_hash, generate_password_hash
 from flask import Flask, render_template, request, send_file, redirect, session, flash
 from dotenv import load_dotenv
 from pdf_generator import create_invoice_pdf
@@ -11,7 +12,16 @@ from database import (
     delete_invoice,
     get_invoice_statistics,
     get_monthly_statistics,
-    get_product_statistics
+    get_product_statistics,
+    get_total_users,
+    get_total_invoices,
+    get_total_revenue,
+    get_all_users,
+    get_all_invoices_admin,
+    get_recent_invoices,
+    delete_user_account,
+    update_user_name,
+    get_admin_count
 )
 from datetime import datetime
 from signup import signup
@@ -54,6 +64,65 @@ def forgot_password_route():
 @app.route("/reset-password/<token>", methods=["GET", "POST"])
 def reset_password_route(token):
     return reset_password(token)
+
+
+@app.route("/delete-account")
+def delete_account_page():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    return render_template("delete_account.html")
+
+@app.route("/delete-account", methods=["POST"])
+def delete_account():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    password = request.form["password"]
+
+    user_id = session["user_id"]
+
+    from database import get_user_by_email
+
+    user = get_user_by_email(
+        session["user_email"]
+    )
+
+    if user is None:
+        session.clear()
+        return redirect("/")
+
+    if not check_password_hash(
+        user["password"],
+        password
+    ):
+        flash("Incorrect password. Account was not deleted.")
+        return redirect("/delete-account")
+
+    # Prevent deleting the last administrator
+    if user["role"] == "admin":
+
+        admin_count = get_admin_count()
+
+        if admin_count <= 1:
+
+            flash(
+                "The last administrator account cannot be deleted."
+            )
+
+            return redirect("/delete-account")
+
+    delete_user_account(user_id)
+
+    session.clear()
+
+    flash(
+        "Your account and all associated data have been permanently deleted."
+    )
+
+    return redirect("/")
 
 @app.route("/logout")
 def logout():
@@ -327,6 +396,188 @@ def dashboard():
         product_statistics=product_statistics,
         user_name=session["user_name"]
     )
+
+
+@app.route("/statistics")
+def statistics_page():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    statistics = get_invoice_statistics(
+        session["user_id"]
+    )
+
+    return render_template(
+        "statistics.html",
+        statistics=statistics
+    )
+
+
+@app.route("/monthly-statistics")
+def monthly_statistics_page():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    monthly_statistics = get_monthly_statistics(
+        session["user_id"]
+    )
+
+    return render_template(
+        "monthly_statistics.html",
+        monthly_statistics=monthly_statistics
+    )
+
+
+@app.route("/product-sales")
+def product_sales_page():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    product_statistics = get_product_statistics(
+        session["user_id"]
+    )
+
+    return render_template(
+        "product_sales.html",
+        product_statistics=product_statistics
+    )
+
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+
+        new_name = request.form["name"].strip()
+
+        if not new_name:
+            flash("Name cannot be empty.")
+            return redirect("/profile")
+
+        update_user_name(
+            session["user_id"],
+            new_name
+        )
+
+        # Update the current session
+        # so the new name appears immediately
+        session["user_name"] = new_name
+
+        flash("Your name has been updated successfully.")
+
+        return redirect("/profile")
+
+    from database import get_user_by_email
+
+    user = get_user_by_email(
+        session["user_email"]
+    )
+
+    return render_template(
+        "profile.html",
+        user=user
+    )
+
+@app.route("/change-password", methods=["GET", "POST"])
+def change_password():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if request.method == "POST":
+
+        current_password = request.form["current_password"]
+        new_password = request.form["new_password"]
+        confirm_password = request.form["confirm_password"]
+
+        from database import get_user_by_email
+
+        user = get_user_by_email(
+            session["user_email"]
+        )
+
+        if user is None:
+            session.clear()
+            return redirect("/")
+
+        # Check current password
+        if not check_password_hash(
+            user["password"],
+            current_password
+        ):
+            flash("Current password is incorrect.")
+            return redirect("/change-password")
+
+        # Check new password confirmation
+        if new_password != confirm_password:
+            flash("New passwords do not match.")
+            return redirect("/change-password")
+
+        # Prevent using the same password
+        if check_password_hash(
+            user["password"],
+            new_password
+        ):
+            flash("New password must be different from your current password.")
+            return redirect("/change-password")
+
+        # Hash new password
+        hashed_password = generate_password_hash(
+            new_password
+        )
+
+        # Update database
+        from database import update_user_password
+
+        update_user_password(
+            session["user_id"],
+            hashed_password
+        )
+
+        flash("Your password has been changed successfully.")
+
+        return redirect("/profile")
+
+    return render_template(
+        "change_password.html"
+    )
+
+
+@app.route("/admin")
+def admin_dashboard():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("user_role") != "admin":
+        flash("Access denied.")
+        return redirect("/dashboard")
+
+    total_users = get_total_users()
+    total_invoices = get_total_invoices()
+    total_revenue = get_total_revenue()
+
+    users = get_all_users()
+    invoices = get_all_invoices_admin()
+    recent_invoices = get_recent_invoices()
+
+    return render_template(
+        "admin.html",
+        user_name=session["user_name"],
+        total_users=total_users,
+        total_invoices=total_invoices,
+        total_revenue=total_revenue,
+        users=users,
+        invoices=invoices,
+        recent_invoices=recent_invoices
+    )
+
 
 if __name__ == "__main__":
 
