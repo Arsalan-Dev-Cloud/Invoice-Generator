@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Invoice Generator | Create Professional Invoices</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body class="landing-page">
+
+    <!-- Navigation -->
+
+    <nav class="landing-nav">
+
+        <div class="landing-logo">
+            🧾 Invoice Generator
+        </div>
+
+        <div class="landing-nav-links">
+
+            <a href="#home">Home</a>
+
+            <a href="#about">About</a>
+
+            <a href="#features">Features</a>
+
+            <a href="#how-it-works">How It Works</a>
+
+            <a href="/login" class="nav-login">
+                Login
+            </a>
+
+            <a href="/signup" class="nav-signup">
+                Sign Up
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Hero Section -->
+
+    <section id="home" class="hero-section">
+
+        <div class="hero-content">
+
+            <p class="hero-label">
+                SIMPLE • FAST • PROFESSIONAL
+            </p>
+
+            <h1>
+                Create Professional
+                <span>Invoices</span> Easily
+            </h1>
+
+            <p class="hero-description">
+                Generate professional PDF invoices, manage your
+                invoice history, and monitor your business
+                performance from one simple platform.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="/signup" class="primary-btn">
+                    Get Started
+                </a>
+
+                <a href="/login" class="secondary-btn">
+                    Login
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-card">
+
+            <div class="hero-card-header">
+
+                <span>Invoice Preview</span>
+
+                <span>✓</span>
+
+            </div>
+
+            <div class="invoice-preview">
+
+                <div class="preview-title">
+                    INVOICE
+                </div>
+
+                <div class="preview-number">
+                    INV-001
+                </div>
+
+                <div class="preview-line"></div>
+
+                <div class="preview-row">
+                    <span>Product</span>
+                    <span>₹1,000</span>
+                </div>
+
+                <div class="preview-row">
+                    <span>Service</span>
+                    <span>₹2,000</span>
+                </div>
+
+                <div class="preview-line"></div>
+
+                <div class="preview-total">
+                    <span>Total</span>
+                    <span>₹3,540</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Features -->
+
+    <section id="features" class="landing-section">
+
+        <div class="section-heading">
+
+            <p>FEATURES</p>
+
+            <h2>
+                Everything You Need
+                to Manage Invoices
+            </h2>
+
+            <span>
+                A simple invoice management system designed
+                for creating, tracking and analyzing invoices.
+            </span>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📄
+                </div>
+
+                <h3>PDF Invoices</h3>
+
+                <p>
+                    Generate professional PDF invoices
+                    instantly using your invoice data.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📊
+                </div>
+
+                <h3>Dashboard</h3>
+
+                <p>
+                    Monitor invoice statistics, revenue
+                    and product performance.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🔐
+                </div>
+
+                <h3>Secure Accounts</h3>
+
+                <p>
+                    User authentication keeps invoice
+                    information separated between accounts.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    📋
+                </div>
+
+                <h3>Invoice History</h3>
+
+                <p>
+                    Easily view, download and manage
+                    previously generated invoices.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- About -->
+
+    <section id="about" class="about-section">
+
+        <div class="about-content">
+
+            <p class="section-label">
+                ABOUT THE PROJECT
+            </p>
+
+            <h2>
+                A Simple Invoice Management System
+            </h2>
+
+            <p>
+                Invoice Generator is a Flask-based web
+                application designed to simplify invoice
+                creation and management.
+            </p>
+
+            <p>
+                Users can create invoices with multiple
+                products, automatically calculate GST and
+                totals, generate PDF invoices, and review
+                their invoice history.
+            </p>
+
+            <p>
+                The project also includes user authentication,
+                password recovery, database management and
+                business analytics.
+            </p>
+
+        </div>
+
+
+        <div class="about-tech">
+
+            <div class="tech-item">
+                <strong>Python</strong>
+                <span>Application Logic</span>
+            </div>
+
+            <div class="tech-item">
+                <strong>Flask</strong>
+                <span>Web Framework</span>
+            </div>
+
+            <div class="tech-item">
+                <strong>SQLite</strong>
+                <span>Database</span>
+            </div>
+
+            <div class="tech-item">
+                <strong>ReportLab</strong>
+                <span>PDF Generation</span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- How It Works -->
+
+    <section id="how-it-works" class="landing-section">
+
+        <div class="section-heading">
+
+            <p>HOW IT WORKS</p>
+
+            <h2>
+                Create an Invoice in Three Steps
+            </h2>
+
+        </div>
+
+
+        <div class="steps-grid">
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <h3>Create an Account</h3>
+
+                <p>
+                    Sign up for an account and securely
+                    access your invoice dashboard.
+                </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <h3>Create Your Invoice</h3>
+
+                <p>
+                    Enter customer information and add
+                    products or services to your invoice.
+                </p>
+
+            </div>
+
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <h3>Download PDF</h3>
+
+                <p>
+                    Generate your invoice and download
+                    the professional PDF instantly.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Call To Action -->
+
+    <section class="cta-section">
+
+        <h2>
+            Ready to Create Your First Invoice?
+        </h2>
+
+        <p>
+            Start creating professional invoices today.
+        </p>
+
+        <a href="/signup" class="primary-btn">
+            Create Free Account
+        </a>
+
+    </section>
+
+
+    <!-- Footer -->
+
+    <footer class="landing-footer">
+
+        <div>
+
+            <strong>
+                🧾 Invoice Generator
+            </strong>
+
+            <p>
+                Simple invoice creation and management.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="#home">Home</a>
+
+            <a href="#about">About</a>
+
+            <a href="#features">Features</a>
+
+            <a href="/login">Login</a>
+
+            <a href="/signup">Sign Up</a>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                Invoice Generator • Built with Python & Flask
+            </p>
+
+        </div>
+
+    </footer>
+
+
+</body>
+
+</html>
