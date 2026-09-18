@@ -1,4 +1,5 @@
 import sqlite3
+import os
 
 
 DATABASE_NAME = "invoices.db"
@@ -481,6 +482,242 @@ def update_user_password(user_id, hashed_password):
 
     connection.commit()
     connection.close()
+
+def get_total_users():
+
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM users
+    """)
+
+    total_users = cursor.fetchone()[0]
+
+    connection.close()
+
+    return total_users
+
+
+def get_total_invoices():
+
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM invoices
+    """)
+
+    total_invoices = cursor.fetchone()[0]
+
+    connection.close()
+
+    return total_invoices
+
+
+def get_total_revenue():
+
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COALESCE(SUM(grand_total), 0)
+        FROM invoices
+    """)
+
+    total_revenue = cursor.fetchone()[0]
+
+    connection.close()
+
+    return total_revenue
+
+def get_all_users():
+
+    connection = sqlite3.connect(DATABASE_NAME)
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT
+            users.id,
+            users.name,
+            users.email,
+            users.role,
+            COUNT(invoices.id) AS invoice_count
+        FROM users
+        LEFT JOIN invoices
+            ON users.id = invoices.user_id
+        GROUP BY
+            users.id,
+            users.name,
+            users.email,
+            users.role
+        ORDER BY users.id
+    """)
+
+    users = cursor.fetchall()
+
+    connection.close()
+
+    return users
+
+
+def get_all_invoices_admin():
+
+    connection = sqlite3.connect(DATABASE_NAME)
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT
+            invoices.id,
+            invoices.invoice_number,
+            invoices.customer_name,
+            invoices.customer_email,
+            invoices.invoice_date,
+            invoices.grand_total,
+            users.name AS user_name,
+            users.email AS user_email
+        FROM invoices
+        LEFT JOIN users
+            ON invoices.user_id = users.id
+        ORDER BY invoices.id DESC
+    """)
+
+    invoices = cursor.fetchall()
+
+    connection.close()
+
+    return invoices
+
+def get_recent_invoices(limit=5):
+
+    connection = sqlite3.connect(DATABASE_NAME)
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT
+            invoices.invoice_number,
+            invoices.customer_name,
+            invoices.invoice_date,
+            invoices.grand_total,
+            users.name AS user_name
+        FROM invoices
+        LEFT JOIN users
+            ON invoices.user_id = users.id
+        ORDER BY invoices.id DESC
+        LIMIT ?
+    """, (limit,))
+
+    invoices = cursor.fetchall()
+
+    connection.close()
+
+    return invoices
+
+def delete_user_account(user_id):
+
+    connection = sqlite3.connect(DATABASE_NAME)
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+
+    # Get invoice numbers before deleting invoices
+    cursor.execute("""
+        SELECT invoice_number
+        FROM invoices
+        WHERE user_id = ?
+    """, (user_id,))
+
+    invoices = cursor.fetchall()
+
+    # Delete invoice items
+    cursor.execute("""
+        DELETE FROM invoice_items
+        WHERE invoice_id IN (
+            SELECT id
+            FROM invoices
+            WHERE user_id = ?
+        )
+    """, (user_id,))
+
+    # Delete invoices
+    cursor.execute("""
+        DELETE FROM invoices
+        WHERE user_id = ?
+    """, (user_id,))
+
+    # Delete password reset tokens
+    cursor.execute("""
+        DELETE FROM password_reset_tokens
+        WHERE user_id = ?
+    """, (user_id,))
+
+    # Delete user account
+    cursor.execute("""
+        DELETE FROM users
+        WHERE id = ?
+    """, (user_id,))
+
+    connection.commit()
+    connection.close()
+
+    # Delete generated invoice PDF files
+    for invoice in invoices:
+
+        invoice_number = invoice["invoice_number"]
+
+        file_path = os.path.join(
+            "invoices",
+            f"{invoice_number}.pdf"
+        )
+
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+    print("User account and associated data deleted successfully!")
+
+
+def update_user_name(user_id, new_name):
+
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        UPDATE users
+        SET name = ?
+        WHERE id = ?
+    """, (new_name, user_id))
+
+    connection.commit()
+    connection.close()
+
+    print("User name updated successfully!")
+
+
+def get_admin_count():
+
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM users
+        WHERE role = 'admin'
+    """)
+
+    admin_count = cursor.fetchone()[0]
+
+    connection.close()
+
+    return admin_count
+
 
 if __name__ == "__main__":
     create_database()
