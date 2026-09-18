@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, send_file, redirect, session
+from flask import Flask, render_template, request, send_file, redirect, session, flash
 from dotenv import load_dotenv
 from pdf_generator import create_invoice_pdf
 from database import (
@@ -23,6 +23,15 @@ load_dotenv()
 app = Flask(__name__)
 
 app.secret_key = os.getenv("SECRET_KEY")
+
+@app.after_request
+def add_security_headers(response):
+
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+
+    return response
 
 create_database()
 
@@ -50,6 +59,8 @@ def reset_password_route(token):
 def logout():
 
     session.clear()
+
+    flash("You have been logged out successfully.")
 
     return redirect("/login")
 
