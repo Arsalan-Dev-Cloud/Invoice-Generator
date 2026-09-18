@@ -1,0 +1,147 @@
+{% extends "dashboard_layout.html" %}
+
+{% block title %}
+Product Sales - Invoice Generator
+{% endblock %}
+
+
+{% block extra_head %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Product Sales
+        </h1>
+
+        <p>
+            View sales performance by product
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="dashboard-card">
+
+    <h2>
+        Product Sales Overview
+    </h2>
+
+    <p>
+        Quantity sold for each product
+    </p>
+
+
+    <div class="chart-container">
+
+        <canvas id="productSalesChart"></canvas>
+
+    </div>
+
+</div>
+
+
+<script
+    type="application/json"
+    id="product-data"
+>
+{{ product_statistics
+   | default([], true)
+   | tojson
+   | safe
+}}
+</script>
+
+
+<script>
+
+const productData = JSON.parse(
+    document.getElementById(
+        "product-data"
+    ).textContent || "[]"
+);
+
+
+const products = Array.isArray(productData)
+    ? productData.map(row => row[0])
+    : [];
+
+
+const quantities = Array.isArray(productData)
+    ? productData.map(row => Number(row[1]) || 0)
+    : [];
+
+
+const chartElement =
+    document.getElementById(
+        "productSalesChart"
+    );
+
+
+if (chartElement) {
+
+    const ctx =
+        chartElement.getContext("2d");
+
+
+    new Chart(
+        ctx,
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels: products,
+
+                datasets: [
+
+                    {
+
+                        label:
+                            "Quantity Sold",
+
+                        data: quantities
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+}
+
+</script>
+
+
+{% endblock %}
