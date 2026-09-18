@@ -1,0 +1,182 @@
+{% extends "dashboard_layout.html" %}
+
+
+{% block title %}
+Statistics - Invoice Generator
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Statistics
+        </h1>
+
+        <p>
+            Overview of your invoice performance
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================
+     Statistics Cards
+     ===================================== -->
+
+<div class="statistics-grid">
+
+
+    <div class="statistics-card">
+
+        <h3>
+            Total Invoices
+        </h3>
+
+        <p>
+            {{ statistics["total_invoices"] }}
+        </p>
+
+    </div>
+
+
+    <div class="statistics-card">
+
+        <h3>
+            Total Revenue
+        </h3>
+
+        <p>
+            INR
+            {{ "%.2f"|format(
+                statistics["total_revenue"]
+            ) }}
+        </p>
+
+    </div>
+
+
+    <div class="statistics-card">
+
+        <h3>
+            Total GST
+        </h3>
+
+        <p>
+            INR
+            {{ "%.2f"|format(
+                statistics["total_gst"]
+            ) }}
+        </p>
+
+    </div>
+
+
+    <div class="statistics-card">
+
+        <h3>
+            Average Invoice
+        </h3>
+
+        <p>
+            INR
+            {{ "%.2f"|format(
+                statistics["average_invoice"]
+            ) }}
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<!-- =====================================
+     Statistics Information
+     ===================================== -->
+
+<div class="dashboard-grid">
+
+
+    <div class="dashboard-card">
+
+        <h2>
+            Invoice Summary
+        </h2>
+
+        <p>
+            Total number of invoices generated:
+            <strong>
+                {{ statistics["total_invoices"] }}
+            </strong>
+        </p>
+
+        <p>
+            Total revenue generated:
+            <strong>
+                INR
+                {{ "%.2f"|format(
+                    statistics["total_revenue"]
+                ) }}
+            </strong>
+        </p>
+
+        <p>
+            Total GST collected:
+            <strong>
+                INR
+                {{ "%.2f"|format(
+                    statistics["total_gst"]
+                ) }}
+            </strong>
+        </p>
+
+        <p>
+            Average invoice value:
+            <strong>
+                INR
+                {{ "%.2f"|format(
+                    statistics["average_invoice"]
+                ) }}
+            </strong>
+        </p>
+
+    </div>
+
+
+    <div class="dashboard-card">
+
+        <h2>
+            Quick Actions
+        </h2>
+
+        <div class="quick-actions">
+
+            <a
+                href="/create-invoice"
+                class="quick-action-button"
+            >
+                ➕ Create Invoice
+            </a>
+
+
+            <a
+                href="/history"
+                class="quick-action-button"
+            >
+                🧾 Invoice History
+            </a>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}
