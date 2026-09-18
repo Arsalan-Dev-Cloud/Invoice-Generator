@@ -837,11 +837,15 @@ tr:hover {
     }
 
 }
+
 /* =========================================
-   Dashboard & History Page Width
+   Dashboard, History & Invoice Details Width
    ========================================= */
 
 .dashboard-container,
-.history-container {
+.history-container,
+.invoice-details-container {
     max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
 }
