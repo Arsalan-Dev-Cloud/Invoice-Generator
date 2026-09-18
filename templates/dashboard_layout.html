@@ -57,7 +57,10 @@
             <nav class="sidebar-nav">
 
 
-                <a href="/dashboard">
+                <a 
+                    href="/dashboard"
+                    class="{% if request.path == '/dashboard' %}active{% endif %}"
+                >
 
                     <span class="sidebar-icon">
                         🏠
@@ -70,7 +73,10 @@
                 </a>
 
 
-                <a href="/statistics">
+                <a
+                    href="/statistics"
+                    class="{% if request.path == '/statistics' %}active{% endif %}"
+                >
 
                     <span class="sidebar-icon">
                         📊
@@ -83,7 +89,10 @@
                 </a>
 
 
-                <a href="/monthly-statistics">
+                <a
+                    href="/monthly-statistics"
+                    class="{% if request.path == '/monthly-statistics' %}active{% endif %}"
+                >
 
                     <span class="sidebar-icon">
                         📅
@@ -96,7 +105,10 @@
                 </a>
 
 
-                <a href="/product-sales">
+                <a
+                    href="/product-sales"
+                    class="{% if request.path == '/product-sales' %}active{% endif %}"
+                >
 
                     <span class="sidebar-icon">
                         📦
@@ -109,7 +121,10 @@
                 </a>
 
 
-                <a href="/history">
+                <a
+                    href="/history"
+                    class="{% if request.path == '/history' or request.path.startswith('/invoice/') %}active{% endif %}"
+                >
 
                     <span class="sidebar-icon">
                         🧾
@@ -122,7 +137,10 @@
                 </a>
 
 
-                <a href="/create-invoice">
+                <a
+                    href="/create-invoice"
+                    class="{% if request.path == '/create-invoice' %}active{% endif %}"
+                >
 
                     <span class="sidebar-icon">
                         ➕
@@ -143,7 +161,10 @@
             <div class="sidebar-bottom">
 
 
-                <a href="/profile">
+                <a
+                    href="/profile"
+                    class="{% if request.path == '/profile' or request.path == '/change-password' or request.path == '/delete-account' %}active{% endif %}"
+                >
 
                     <span class="sidebar-icon">
                         ⚙️
