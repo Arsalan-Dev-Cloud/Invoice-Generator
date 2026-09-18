@@ -837,3 +837,11 @@ tr:hover {
     }
 
 }
+/* =========================================
+   Dashboard & History Page Width
+   ========================================= */
+
+.dashboard-container,
+.history-container {
+    max-width: 1400px;
+}
