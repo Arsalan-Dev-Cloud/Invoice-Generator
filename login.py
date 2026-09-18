@@ -34,6 +34,10 @@ def login():
         session["user_id"] = user["id"]
         session["user_name"] = user["name"]
         session["user_email"] = user["email"]
+        session["user_role"] = user["role"]
+
+        if user["role"] == "admin":
+            return redirect("/admin")
 
         return redirect("/dashboard")
 
