@@ -60,6 +60,16 @@ def home():
     return render_template("landing.html")
 
 
+@app.route("/create-invoice")
+def create_invoice():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    return render_template("index.html")
+
+
+
 @app.route("/generate", methods=["POST"])
 def generate_invoice():
 
