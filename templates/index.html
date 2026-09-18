@@ -1,186 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "dashboard_layout.html" %}
 
-<head>
+{% block title %}
+Create Invoice - Invoice Generator
+{% endblock %}
 
-    <meta charset="UTF-8">
+{% block content %}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Invoice Generator</title>
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}"
-    >
-
-</head>
-
-<body>
-
-    <div class="container">
-
-        <!-- Header -->
-
-        <div class="header">
-
-            <h1>Invoice Generator</h1>
-
-            <p>Create and download professional invoices</p>
-
-        </div>
+<div class="page-header">
 
 
-        <!-- Invoice Card -->
+<div>
 
-        <div class="invoice-card">
+    <h1>
+        Create Invoice
+    </h1>
 
-            <h2>Create Invoice</h2>
+    <p>
+        Create and download a professional invoice
+    </p>
 
-
-            <form action="/generate" method="POST">
-
-
-                <!-- Customer Name -->
-
-                <div class="form-group">
-
-                    <label for="customer_name">
-                        Customer Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="customer_name"
-                        name="customer_name"
-                        placeholder="Enter customer name"
-                        required
-                    >
-
-                </div>
+</div>
 
 
-                <!-- Customer Email -->
+</div>
 
-                <div class="form-group">
-
-                    <label for="customer_email">
-                        Customer Email
-                    </label>
-
-                    <input
-                        type="email"
-                        id="customer_email"
-                        name="customer_email"
-                        placeholder="Enter customer email"
-                        required
-                    >
-
-                </div>
+<div class="dashboard-card">
 
 
-                <!-- Invoice Items -->
+<h2>
+    Invoice Information
+</h2>
 
-                <h3 class="items-title">
-                    Invoice Items
-                </h3>
+<p>
+    Enter customer details and add the products or services
+    you want to include in the invoice.
+</p>
 
 
-                <div id="items-container">
+<form
+    action="/generate"
+    method="POST"
+>
 
-                    <div class="item-row">
 
-                        <div class="form-group">
+    <!-- Customer Name -->
 
-                            <label>Product</label>
+    <div class="form-group">
 
-                            <input
-                                type="text"
-                                name="product_name[]"
-                                placeholder="Product name"
-                                required
-                            >
+        <label for="customer_name">
+            Customer Name
+        </label>
 
-                        </div>
+        <input
+            type="text"
+            id="customer_name"
+            name="customer_name"
+            placeholder="Enter customer name"
+            required
+        >
 
-                        <div class="form-group">
+    </div>
 
-                            <label>Quantity</label>
 
-                            <input
-                                type="number"
-                                name="quantity[]"
-                                placeholder="Qty"
-                                min="1"
-                                required
-                            >
+    <!-- Customer Email -->
 
-                        </div>
+    <div class="form-group">
 
-                        <div class="form-group">
+        <label for="customer_email">
+            Customer Email
+        </label>
 
-                            <label>Price</label>
+        <input
+            type="email"
+            id="customer_email"
+            name="customer_email"
+            placeholder="Enter customer email"
+            required
+        >
 
-                            <input
-                                type="number"
-                                name="price[]"
-                                placeholder="Price"
-                                min="0"
-                                step="0.01"
-                                required
-                            >
+    </div>
 
-                        </div>
 
-                    </div>
+    <!-- Invoice Items -->
 
-                </div>
-                <button
-                    type="button"
-                    class="add-item-btn"
-                    onclick="addItem()"
+    <h3 class="items-title">
+        Invoice Items
+    </h3>
+
+
+    <div id="items-container">
+
+        <div class="item-row">
+
+            <div class="form-group">
+
+                <label>
+                    Product
+                </label>
+
+                <input
+                    type="text"
+                    name="product_name[]"
+                    placeholder="Product name"
+                    required
                 >
-                    + Add Item
-                </button>
+
+            </div>
 
 
-                <!-- Generate Button -->
+            <div class="form-group">
 
-                <button
-                    type="submit"
-                    class="generate-btn"
+                <label>
+                    Quantity
+                </label>
+
+                <input
+                    type="number"
+                    name="quantity[]"
+                    placeholder="Qty"
+                    min="1"
+                    required
                 >
-                    Generate Invoice
-                </button>
 
-                <a href="/dashboard" class="dashboard-btn">
-                    📊 Dashboard
-                </a>
-
-                <a href="/history" class="history-btn">
-                    📋 Invoice History
-                </a>
+            </div>
 
 
-            </form>
+            <div class="form-group">
 
-        </div>
+                <label>
+                    Price
+                </label>
 
+                <input
+                    type="number"
+                    name="price[]"
+                    placeholder="Price"
+                    min="0"
+                    step="0.01"
+                    required
+                >
 
-        <!-- Footer -->
-
-        <div class="footer">
-
-            <p>
-                Invoice Generator • Built with Python & Flask
-            </p>
+            </div>
 
         </div>
 
     </div>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
 
-</body>
+    <!-- Add Item -->
 
-</html>
+    <button
+        type="button"
+        class="add-item-btn"
+        onclick="addItem()"
+    >
+        + Add Item
+    </button>
+
+
+    <!-- Generate Invoice -->
+
+    <button
+        type="submit"
+        class="generate-btn"
+    >
+        Generate Invoice
+    </button>
+
+
+</form>
+
+
+</div>
+
+<script
+    src="{{ url_for('static', filename='script.js') }}"
+></script>
+
+{% endblock %}
