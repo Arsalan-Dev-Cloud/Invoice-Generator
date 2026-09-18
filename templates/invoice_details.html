@@ -1,192 +1,200 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "dashboard_layout.html" %}
 
-<head>
+{% block title %}
+Invoice Details - Invoice Generator
+{% endblock %}
 
-    <meta charset="UTF-8">
+{% block content %}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="page-header">
 
-    <title>Invoice Details</title>
 
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}"
+<div>
+
+    <h1>
+        Invoice Details
+    </h1>
+
+    <p>
+        {{ invoice["invoice_number"] }}
+    </p>
+
+</div>
+
+
+</div>
+
+<div class="dashboard-card">
+
+
+<!-- Customer Information -->
+
+<h2>
+    Customer Information
+</h2>
+
+
+<div class="details-section">
+
+    <p>
+        <strong>
+            Name:
+        </strong>
+
+        {{ invoice["customer_name"] }}
+    </p>
+
+
+    <p>
+        <strong>
+            Email:
+        </strong>
+
+        {{ invoice["customer_email"] }}
+    </p>
+
+
+    <p>
+        <strong>
+            Date:
+        </strong>
+
+        {{ invoice["invoice_date"] }}
+    </p>
+
+</div>
+
+
+<!-- Invoice Items -->
+
+<h2 class="details-title">
+    Invoice Items
+</h2>
+
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Product
+                </th>
+
+                <th>
+                    Quantity
+                </th>
+
+                <th>
+                    Price
+                </th>
+
+                <th>
+                    Total
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for item in items %}
+
+            <tr>
+
+                <td>
+                    {{ item["product_name"] }}
+                </td>
+
+                <td>
+                    {{ item["quantity"] }}
+                </td>
+
+                <td>
+                    INR {{ "%.2f"|format(item["price"]) }}
+                </td>
+
+                <td>
+                    INR {{ "%.2f"|format(item["total"]) }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- Invoice Summary -->
+
+<div class="invoice-summary">
+
+    <p>
+
+        <strong>
+            Subtotal:
+        </strong>
+
+        INR {{ "%.2f"|format(invoice["subtotal"]) }}
+
+    </p>
+
+
+    <p>
+
+        <strong>
+            GST:
+        </strong>
+
+        INR {{ "%.2f"|format(invoice["gst"]) }}
+
+    </p>
+
+
+    <p class="grand-total">
+
+        <strong>
+            Grand Total:
+        </strong>
+
+        INR {{ "%.2f"|format(invoice["grand_total"]) }}
+
+    </p>
+
+</div>
+
+
+<!-- Actions -->
+
+<div class="details-actions">
+
+    <a
+        href="/invoice/{{ invoice['id'] }}/download"
+        class="download-btn"
     >
+        📥 Download PDF
+    </a>
 
-</head>
 
+    <a
+        href="/history"
+        class="back-btn"
+    >
+        ← Back to Invoice History
+    </a>
 
-<body>
+</div>
 
-    <div class="container invoice-details-container">
 
-        <div class="header">
+</div>
 
-            <h1>Invoice Details</h1>
-
-            <p>
-                {{ invoice["invoice_number"] }}
-            </p>
-
-        </div>
-
-
-        <div class="invoice-card">
-
-            <!-- Customer Information -->
-
-            <h2>Customer Information</h2>
-
-            <div class="details-section">
-
-                <p>
-                    <strong>Name:</strong>
-                    {{ invoice["customer_name"] }}
-                </p>
-
-                <p>
-                    <strong>Email:</strong>
-                    {{ invoice["customer_email"] }}
-                </p>
-
-                <p>
-                    <strong>Date:</strong>
-                    {{ invoice["invoice_date"] }}
-                </p>
-
-            </div>
-
-
-            <!-- Invoice Items -->
-
-            <h2 class="details-title">
-                Invoice Items
-            </h2>
-
-
-            <div class="table-container">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Product</th>
-
-                            <th>Quantity</th>
-
-                            <th>Price</th>
-
-                            <th>Total</th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        {% for item in items %}
-
-                        <tr>
-
-                            <td>
-                                {{ item["product_name"] }}
-                            </td>
-
-                            <td>
-                                {{ item["quantity"] }}
-                            </td>
-
-                            <td>
-                                INR {{ "%.2f"|format(item["price"]) }}
-                            </td>
-
-                            <td>
-                                INR {{ "%.2f"|format(item["total"]) }}
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            <!-- Invoice Summary -->
-
-            <div class="invoice-summary">
-
-                <p>
-                    <strong>
-                        Subtotal:
-                    </strong>
-
-                    INR {{ "%.2f"|format(invoice["subtotal"]) }}
-
-                </p>
-
-
-                <p>
-                    <strong>
-                        GST:
-                    </strong>
-
-                    INR {{ "%.2f"|format(invoice["gst"]) }}
-
-                </p>
-
-
-                <p class="grand-total">
-
-                    Grand Total:
-
-                    INR {{ "%.2f"|format(invoice["grand_total"]) }}
-
-                </p>
-
-            </div>
-
-
-            <!-- Navigation -->
-
-            <div class="details-actions">
-
-                <a
-                    href="/invoice/{{ invoice['id'] }}/download"
-                    class="download-btn"
-                >
-                    Download PDF
-                </a>
-
-                <a
-                    href="/history"
-                    class="back-btn"
-                >
-                    ← Back to Invoice History
-                </a>
-
-            </div>
-
-        </div>
-
-
-        <div class="footer">
-
-            <p>
-                Invoice Generator • Built with Python & Flask
-            </p>
-
-        </div>
-
-    </div>
-
-</body>
-
-</html>
+{% endblock %}
