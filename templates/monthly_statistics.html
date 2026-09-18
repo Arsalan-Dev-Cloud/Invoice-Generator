@@ -1,0 +1,146 @@
+{% extends "dashboard_layout.html" %}
+
+{% block title %}
+Monthly Statistics - Invoice Generator
+{% endblock %}
+
+
+{% block extra_head %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Monthly Statistics
+        </h1>
+
+        <p>
+            View your monthly invoice and revenue performance
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="dashboard-card">
+
+    <h2>
+        Monthly Revenue
+    </h2>
+
+    <p>
+        Revenue generated each month
+    </p>
+
+
+    <div class="chart-container">
+
+        <canvas id="monthlyRevenueChart"></canvas>
+
+    </div>
+
+</div>
+
+
+<script
+    type="application/json"
+    id="monthly-data"
+>
+{{ monthly_statistics
+   | default([], true)
+   | tojson
+   | safe
+}}
+</script>
+
+
+<script>
+
+const monthlyData = JSON.parse(
+    document.getElementById(
+        "monthly-data"
+    ).textContent || "[]"
+);
+
+
+const months = Array.isArray(monthlyData)
+    ? monthlyData.map(row => row[0])
+    : [];
+
+
+const revenue = Array.isArray(monthlyData)
+    ? monthlyData.map(row => Number(row[2]) || 0)
+    : [];
+
+
+const chartElement =
+    document.getElementById(
+        "monthlyRevenueChart"
+    );
+
+
+if (chartElement) {
+
+    const ctx =
+        chartElement.getContext("2d");
+
+
+    new Chart(
+        ctx,
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels: months,
+
+                datasets: [
+
+                    {
+
+                        label:
+                            "Monthly Revenue (INR)",
+
+                        data: revenue
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+}
+
+</script>
+
+{% endblock %}
