@@ -75,6 +75,17 @@ def create_database():
         )
     """)
 
+    # Add role column to existing users table if it does not exist
+
+    cursor.execute("PRAGMA table_info(users)")
+    user_columns = [column[1] for column in cursor.fetchall()]
+
+    if "role" not in user_columns:
+        cursor.execute("""
+            ALTER TABLE users
+            ADD COLUMN role TEXT DEFAULT 'user'
+        """)
+
         # Password reset tokens table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS password_reset_tokens (
