@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        Invoice Generator
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    {% block extra_head %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+    <div class="app-layout">
+
+
+        <!-- =================================
+             SIDEBAR
+             ================================= -->
+
+        <aside class="sidebar">
+
+
+            <!-- Logo -->
+
+            <div class="sidebar-logo">
+
+                <h2>
+                    Invoice
+                </h2>
+
+                <span>
+                    Generator
+                </span>
+
+            </div>
+
+
+            <!-- Main Navigation -->
+
+            <nav class="sidebar-nav">
+
+
+                <a href="/dashboard">
+
+                    <span class="sidebar-icon">
+                        🏠
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a href="/statistics">
+
+                    <span class="sidebar-icon">
+                        📊
+                    </span>
+
+                    <span>
+                        Statistics
+                    </span>
+
+                </a>
+
+
+                <a href="/monthly-statistics">
+
+                    <span class="sidebar-icon">
+                        📅
+                    </span>
+
+                    <span>
+                        Monthly Statistics
+                    </span>
+
+                </a>
+
+
+                <a href="/product-sales">
+
+                    <span class="sidebar-icon">
+                        📦
+                    </span>
+
+                    <span>
+                        Product Sales
+                    </span>
+
+                </a>
+
+
+                <a href="/history">
+
+                    <span class="sidebar-icon">
+                        🧾
+                    </span>
+
+                    <span>
+                        Invoice History
+                    </span>
+
+                </a>
+
+
+                <a href="/create-invoice">
+
+                    <span class="sidebar-icon">
+                        ➕
+                    </span>
+
+                    <span>
+                        Create Invoice
+                    </span>
+
+                </a>
+
+
+            </nav>
+
+
+            <!-- Bottom Navigation -->
+
+            <div class="sidebar-bottom">
+
+
+                <a href="/profile">
+
+                    <span class="sidebar-icon">
+                        ⚙️
+                    </span>
+
+                    <span>
+                        Account Settings
+                    </span>
+
+                </a>
+
+
+                <a href="/logout">
+
+                    <span class="sidebar-icon">
+                        🚪
+                    </span>
+
+                    <span>
+                        Logout
+                    </span>
+
+                </a>
+
+
+            </div>
+
+
+        </aside>
+
+
+        <!-- =================================
+             MAIN CONTENT
+             ================================= -->
+
+        <main class="main-content">
+
+                {% with messages = get_flashed_messages() %}
+
+                    {% if messages %}
+
+                        <div class="flash-messages">
+
+                            {% for message in messages %}
+
+                                <div class="flash-message">
+                                    {{ message }}
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+                {% block content %}
+
+                {% endblock %}
+
+            </main>
+
+
+    </div>
+
+
+</body>
+
+</html>
