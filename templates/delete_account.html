@@ -1,0 +1,112 @@
+{% extends "dashboard_layout.html" %}
+
+{% block title %}
+Delete Account - Invoice Generator
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+
+<div>
+
+    <h1>
+        Delete Account
+    </h1>
+
+    <p>
+        Permanently delete your Invoice Generator account
+    </p>
+
+</div>
+
+
+</div>
+
+<div class="dashboard-card account-danger-zone">
+
+
+<h2>
+    ⚠️ Permanently Delete Your Account
+</h2>
+
+<p>
+    This action will permanently remove your account and
+    all data associated with it.
+</p>
+
+
+<h3>
+    The following data will be deleted:
+</h3>
+
+
+<ul>
+
+    <li>Your account information</li>
+
+    <li>All invoices</li>
+
+    <li>All invoice items</li>
+
+    <li>Password reset information</li>
+
+    <li>Generated invoice PDF files</li>
+
+</ul>
+
+
+<p>
+    <strong>
+        This action cannot be undone.
+    </strong>
+</p>
+
+
+<form
+    method="POST"
+    action="/delete-account"
+>
+
+    <div class="form-group">
+
+        <label for="password">
+            Enter your current password to continue
+        </label>
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            required
+        >
+
+    </div>
+
+
+    <div class="details-actions">
+
+        <button
+            type="submit"
+            class="delete-btn"
+        >
+            Permanently Delete Account
+        </button>
+
+
+        <a
+            href="/profile"
+            class="back-btn"
+        >
+            Cancel
+        </a>
+
+    </div>
+
+</form>
+
+
+</div>
+
+{% endblock %}
