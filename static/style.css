@@ -1327,8 +1327,15 @@ tr:hover {
         background 0.2s ease;
 }
 
+.quick-action-button {
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
 .quick-action-button:hover {
     background: #e5e7eb;
+    transform: translateX(3px);
 }
 
 
@@ -1381,4 +1388,38 @@ tr:hover {
     color: #111827;
 
     font-size: 14px;
+}
+/* =========================================
+   Dashboard Card Hover Effects
+   ========================================= */
+
+.statistics-card,
+.dashboard-card {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.statistics-card:hover,
+.dashboard-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 20px
+        rgba(0, 0, 0, 0.08);
+}
+/* =========================================
+   Active Sidebar Navigation
+   ========================================= */
+
+.sidebar-nav a.active,
+.sidebar-bottom a.active {
+    background: #1f2937;
+
+    color: white;
+
+    font-weight: 600;
+
+    box-shadow:
+        inset 3px 0 0 #ffffff;
 }
