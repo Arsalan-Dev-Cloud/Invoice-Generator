@@ -21,7 +21,8 @@ from database import (
     get_recent_invoices,
     delete_user_account,
     update_user_name,
-    get_admin_count
+    get_admin_count,
+    get_normal_user_count
 )
 from datetime import datetime
 from signup import signup
@@ -287,10 +288,15 @@ def generate_invoice():
 def invoice_history():
 
     if "user_id" not in session:
-
         return redirect("/login")
 
-    invoices = get_all_invoices(session["user_id"])
+    # Admin accounts use the admin dashboard
+    if session.get("user_role") == "admin":
+        return redirect("/admin")
+
+    invoices = get_all_invoices(
+        session["user_id"]
+    )
 
     return render_template(
         "history.html",
@@ -377,8 +383,12 @@ def dashboard():
     if "user_id" not in session:
         return redirect("/login")
 
+    # Admin accounts use the admin dashboard
+    if session.get("user_role") == "admin":
+        return redirect("/admin")
+
     statistics = get_invoice_statistics(
-    session["user_id"]
+        session["user_id"]
     )
 
     monthly_statistics = get_monthly_statistics(
@@ -560,6 +570,9 @@ def admin_dashboard():
         return redirect("/dashboard")
 
     total_users = get_total_users()
+    normal_users = get_normal_user_count()
+    administrators = get_admin_count()
+
     total_invoices = get_total_invoices()
     total_revenue = get_total_revenue()
 
@@ -571,6 +584,8 @@ def admin_dashboard():
         "admin.html",
         user_name=session["user_name"],
         total_users=total_users,
+        normal_users=normal_users,
+        administrators=administrators,
         total_invoices=total_invoices,
         total_revenue=total_revenue,
         users=users,
