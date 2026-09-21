@@ -530,10 +530,6 @@ Invoice-Generator/
 ├── login.py
 ├── signup.py
 ├── pdf_generator.py
-│
-├── invoice_counter.txt
-├── invoices.db
-│
 ├── .gitignore
 └── README.md
 ```
@@ -622,47 +618,46 @@ Currently it is not required for the main Invoice Generator workflow.
 
 # 18. Invoice Number System
 
-Invoice numbers are generated automatically.
+Invoice numbers are generated automatically using the application's SQLite database.
 
-The counter is stored in:
+Invoice numbers are maintained **separately for each user**.
 
-```text
-invoice_counter.txt
-```
-
-Example:
+For example:
 
 ```text
-1
+User 1:
+INV-001
+INV-002
+INV-003
+
+User 2:
+INV-001
+INV-002
+INV-003
 ```
 
-The application generates:
+Each user starts from:
 
 ```text
 INV-001
 ```
 
-Next invoice:
+The next invoice number is generated based on that user's latest invoice.
+
+The database prevents duplicate invoice numbers for the same user.
+
+PDF files are stored using a unique filename containing the user ID and invoice number:
 
 ```text
-INV-002
+user_2_INV-001.pdf
+user_2_INV-002.pdf
+
+user_3_INV-001.pdf
+user_3_INV-002.pdf
 ```
 
-Next:
+This allows different users to have the same invoice number without overwriting each other's PDF files.
 
-```text
-INV-003
-```
-
-PDF files use the invoice number:
-
-```text
-INV-001.pdf
-INV-002.pdf
-INV-003.pdf
-```
-
----
 
 # 19. Run the Application
 
@@ -913,9 +908,6 @@ invoices.db
 
 # Generated invoice PDFs
 invoices/
-
-# Local invoice counter
-invoice_counter.txt
 
 # remaining files
 login.py

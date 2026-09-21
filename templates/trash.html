@@ -1,0 +1,172 @@
+{% extends "dashboard_layout.html" %}
+
+{% block title %}
+Trash - Invoice Generator
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Trash
+        </h1>
+
+        <p>
+            View invoices that you have deleted
+        </p>
+
+    </div>
+
+</div>
+
+<div class="dashboard-card">
+
+    <h2>
+        Deleted Invoices
+    </h2>
+
+    <p>
+        Deleted invoices are kept here so they can be restored later.
+    </p>
+
+    {% if invoices %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Invoice No.</th>
+
+                    <th>Customer</th>
+
+                    <th>Email</th>
+
+                    <th>Invoice Date</th>
+
+                    <th>Grand Total</th>
+
+                    <th>Deleted At</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for invoice in invoices %}
+
+                <tr>
+
+                    <td>
+                        {{ invoice["invoice_number"] }}
+                    </td>
+
+                    <td>
+                        {{ invoice["customer_name"] }}
+                    </td>
+
+                    <td>
+                        {{ invoice["customer_email"] }}
+                    </td>
+
+                    <td>
+                        {{ invoice["invoice_date"] }}
+                    </td>
+
+                    <td>
+                        <strong>
+                            INR {{ "%.2f"|format(invoice["grand_total"]) }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ invoice["deleted_at"] }}
+                    </td>
+
+                    <td>
+
+                        <a
+                            href="/invoice/{{ invoice['id'] }}"
+                            class="view-btn"
+                        >
+                            View
+                        </a>
+
+                    </td>
+
+                    <td>
+
+                        <form
+                            action="/invoice/{{ invoice['id'] }}/restore"
+                            method="POST"
+                            style="display: inline;"
+                        >
+
+                            <button
+                                type="submit"
+                                class="view-btn"
+                            >
+                                Restore
+                            </button>
+
+                        </form>
+
+                        <form
+                            action="/invoice/{{ invoice['id'] }}/permanent-delete"
+                            method="POST"
+                            style="display: inline;"
+                            onsubmit="return confirm('Are you sure you want to permanently delete this invoice? This action cannot be undone.');"
+                        >
+
+                            <button
+                                type="submit"
+                                class="delete-btn"
+                            >
+                                Delete Permanently
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <p class="no-invoices">
+        Trash is empty.
+    </p>
+
+    {% endif %}
+
+    <div class="details-actions">
+
+        <a
+            href="/history"
+            class="back-btn"
+        >
+            ← Back to Invoice History
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

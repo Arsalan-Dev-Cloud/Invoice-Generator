@@ -1,0 +1,141 @@
+{% extends "admin/admin_layout.html" %}
+
+{% block title %}
+User Details - Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-page-header">
+
+  
+<div>
+
+    <h1>
+        User Details
+    </h1>
+
+    <p>
+        View account information and invoice activity.
+    </p>
+
+</div>
+  
+
+</div>
+
+<div class="admin-section-card">
+
+  
+<div class="admin-section-header">
+
+    <div>
+
+        <h2>
+            Account Information
+        </h2>
+
+        <p>
+            Details for the selected user account.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="admin-user-details-grid">
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Name
+        </span>
+
+        <strong>
+            {{ user["name"] }}
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Email
+        </span>
+
+        <strong>
+            {{ user["email"] }}
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Role
+        </span>
+
+        <strong>
+
+            <span class="admin-role-badge
+                {% if user['role'] == 'admin' %}
+                    admin
+                {% else %}
+                    user
+                {% endif %}
+            ">
+                {{ user["role"]|capitalize }}
+            </span>
+
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Total Invoices
+        </span>
+
+        <strong>
+            {{ user["invoice_count"] }}
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item admin-user-detail-revenue">
+
+        <span>
+            Total Revenue
+        </span>
+
+        <strong>
+            INR {{ "%.2f"|format(user["total_revenue"]) }}
+        </strong>
+
+    </div>
+
+</div>
+  
+
+</div>
+
+<div class="details-actions">
+
+  
+<a
+    href="/admin/users"
+    class="back-btn"
+>
+    ← Back to Users
+</a>
+  
+
+</div>
+
+{% endblock %}

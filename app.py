@@ -4,6 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask import Flask, render_template, request, send_file, redirect, session, flash
 from dotenv import load_dotenv
 from pdf_generator import create_invoice_pdf
+
 from database import (
     create_database,
     save_invoice,
@@ -22,8 +23,16 @@ from database import (
     delete_user_account,
     update_user_name,
     get_admin_count,
-    get_normal_user_count
+    get_normal_user_count,
+    get_user_details_admin,
+    get_invoice_details_admin,
+    get_deleted_invoices,
+    restore_invoice,
+    permanently_delete_invoice
 )
+
+
+
 from datetime import datetime
 from signup import signup
 from login import login
@@ -236,17 +245,12 @@ def generate_invoice():
     # -----------------------------
 
     file_name, invoice_number = create_invoice_pdf(
-
+        session["user_id"],
         customer_name,
-
         customer_email,
-
         product_names,
-
         quantities,
-
         prices
-
     )
 
 
@@ -304,6 +308,73 @@ def invoice_history():
     )
 
 
+@app.route("/trash")
+def trash():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    deleted_invoices = get_deleted_invoices(
+        session["user_id"]
+    )
+
+    return render_template(
+        "trash.html",
+        invoices=deleted_invoices
+    )
+
+
+@app.route("/invoice/<int:invoice_id>/restore", methods=["POST"])
+def restore_invoice_route(invoice_id):
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    restore_invoice(
+        invoice_id,
+        session["user_id"]
+    )
+
+    return redirect("/trash")
+
+
+@app.route("/invoice/<int:invoice_id>/permanent-delete", methods=["POST"])
+def permanent_delete_invoice_route(invoice_id):
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user_id = session["user_id"]
+
+    deleted_invoices = get_deleted_invoices(user_id)
+
+    invoice = None
+
+    for deleted_invoice in deleted_invoices:
+
+        if deleted_invoice["id"] == invoice_id:
+            invoice = deleted_invoice
+            break
+
+    if invoice is None:
+        return redirect("/trash")
+
+    pdf_path = os.path.join(
+        "invoices",
+        f"user_{user_id}_{invoice['invoice_number']}.pdf"
+    )
+
+    permanently_delete_invoice(
+        invoice_id,
+        user_id
+    )
+
+    if os.path.exists(pdf_path):
+        os.remove(pdf_path)
+
+    return redirect("/trash")
+
+
 @app.route("/invoice/<int:invoice_id>")
 def invoice_details(invoice_id):
 
@@ -340,12 +411,13 @@ def download_invoice(invoice_id):
 
     invoice_number = invoice["invoice_number"]
 
-    file_path = f"invoices/{invoice_number}.pdf"
+    file_path = f"invoices/user_{session['user_id']}_{invoice_number}.pdf"
 
     return send_file(
         file_path,
         as_attachment=True
     )
+
 
 @app.route("/invoice/<int:invoice_id>/delete", methods=["POST"])
 def delete_invoice_route(invoice_id):
@@ -359,16 +431,6 @@ def delete_invoice_route(invoice_id):
     )
 
     if invoice:
-
-        invoice_number = invoice["invoice_number"]
-
-        file_path = os.path.join(
-            "invoices",
-            f"{invoice_number}.pdf"
-        )
-
-        if os.path.exists(file_path):
-            os.remove(file_path)
 
         delete_invoice(
             invoice_id,
@@ -576,22 +638,25 @@ def admin_dashboard():
     total_invoices = get_total_invoices()
     total_revenue = get_total_revenue()
 
-    users = get_all_users()
-    invoices = get_all_invoices_admin()
-    recent_invoices = get_recent_invoices()
-
+    
     return render_template(
+
         "admin/overview.html",
+
         user_name=session["user_name"],
+
         total_users=total_users,
+
         normal_users=normal_users,
+
         administrators=administrators,
+
         total_invoices=total_invoices,
-        total_revenue=total_revenue,
-        users=users,
-        invoices=invoices,
-        recent_invoices=recent_invoices
+
+        total_revenue=total_revenue
+
     )
+  
 
 
 @app.route("/admin/users")
@@ -611,6 +676,51 @@ def admin_users():
         users=users
     )
 
+
+@app.route("/admin/users/<int:user_id>")
+def admin_user_details(user_id):
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("user_role") != "admin":
+        flash("Access denied.")
+        return redirect("/dashboard")
+
+    user = get_user_details_admin(user_id)
+
+    if user is None:
+        flash("User not found.")
+        return redirect("/admin/users")
+
+    return render_template(
+        "admin/user_details.html",
+        user=user
+    )
+
+
+@app.route("/admin/invoices/<int:invoice_id>")
+def admin_invoice_details(invoice_id):
+  
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("user_role") != "admin":
+        flash("Access denied.")
+        return redirect("/dashboard")
+
+    invoice_data = get_invoice_details_admin(invoice_id)
+
+    if invoice_data is None:
+        flash("Invoice not found.")
+        return redirect("/admin/invoices")
+
+    return render_template(
+        "admin/invoice_details.html",
+        invoice=invoice_data["invoice"],
+        items=invoice_data["items"]
+    )
+  
 
 
 @app.route("/admin/invoices")

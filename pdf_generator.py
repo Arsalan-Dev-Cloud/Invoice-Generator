@@ -5,19 +5,59 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from datetime import datetime
 
-def get_next_invoice_number():
+def get_next_invoice_number(user_id):
 
-    with open("invoice_counter.txt", "r") as file:
-        number = int(file.read())
+    import sqlite3
 
-    number += 1
+    connection = sqlite3.connect("invoices.db")
 
-    with open("invoice_counter.txt", "w") as file:
-        file.write(str(number))
+    cursor = connection.cursor()
+
+    # Get the last invoice number used by this user
+    cursor.execute("""
+        SELECT last_invoice_number
+        FROM invoice_counters
+        WHERE user_id = ?
+    """, (user_id,))
+
+    result = cursor.fetchone()
+
+    if result is None:
+
+        number = 1
+
+        cursor.execute("""
+            INSERT INTO invoice_counters (
+                user_id,
+                last_invoice_number
+            )
+            VALUES (?, ?)
+        """, (
+            user_id,
+            number
+        ))
+
+    else:
+
+        number = result[0] + 1
+
+        cursor.execute("""
+            UPDATE invoice_counters
+            SET last_invoice_number = ?
+            WHERE user_id = ?
+        """, (
+            number,
+            user_id
+        ))
+
+    connection.commit()
+
+    connection.close()
 
     return f"INV-{number:03d}"
 
 def create_invoice_pdf(
+    user_id,
     customer_name,
     customer_email,
     product_names,
@@ -26,12 +66,12 @@ def create_invoice_pdf(
 ):
 
    # Invoice information
-    invoice_number = get_next_invoice_number()
+    invoice_number = get_next_invoice_number(user_id)
     invoice_date = datetime.now().strftime("%d-%m-%Y")
 
     file_name = os.path.join(
         "invoices",
-        f"{invoice_number}.pdf"
+        f"user_{user_id}_{invoice_number}.pdf"
     )
 
     pdf = canvas.Canvas(file_name, pagesize=A4)

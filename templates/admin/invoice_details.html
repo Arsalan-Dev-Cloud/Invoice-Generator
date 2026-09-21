@@ -1,0 +1,303 @@
+{% extends "admin/admin_layout.html" %}
+
+{% block title %}
+Invoice Details - Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-page-header">
+
+  
+<div>
+
+    <h1>
+        Invoice Details
+    </h1>
+
+    <p>
+        View complete invoice information and generated items.
+    </p>
+
+</div>
+  
+
+</div>
+
+<!-- Invoice Information -->
+
+<div class="admin-section-card">
+
+  
+<div class="admin-section-header">
+
+    <div>
+
+        <h2>
+            Invoice Information
+        </h2>
+
+        <p>
+            Details of the selected invoice.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="admin-user-details-grid">
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Invoice Number
+        </span>
+
+        <strong>
+            {{ invoice["invoice_number"] }}
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Invoice Date
+        </span>
+
+        <strong>
+            {{ invoice["invoice_date"] }}
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Customer Name
+        </span>
+
+        <strong>
+            {{ invoice["customer_name"] }}
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Customer Email
+        </span>
+
+        <strong>
+            {{ invoice["customer_email"] }}
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Created By
+        </span>
+
+        <strong>
+            {{ invoice["user_name"] }}
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Creator Email
+        </span>
+
+        <strong>
+            {{ invoice["user_email"] }}
+        </strong>
+
+    </div>
+
+</div>
+  
+
+</div>
+
+<!-- Invoice Items -->
+
+<div class="admin-section-card">
+
+  
+<div class="admin-section-header">
+
+    <div>
+
+        <h2>
+            Invoice Items
+        </h2>
+
+        <p>
+            Products included in this invoice.
+        </p>
+
+    </div>
+
+</div>
+
+
+{% if items %}
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Product</th>
+
+                <th>Quantity</th>
+
+                <th>Price</th>
+
+                <th>Total</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for item in items %}
+
+            <tr>
+
+                <td>
+                    {{ item["product_name"] }}
+                </td>
+
+                <td>
+                    {{ item["quantity"] }}
+                </td>
+
+                <td>
+                    INR {{ "%.2f"|format(item["price"]) }}
+                </td>
+
+                <td>
+                    <strong>
+                        INR {{ "%.2f"|format(item["total"]) }}
+                    </strong>
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% else %}
+
+<div class="admin-empty-state">
+
+    <p>
+        No invoice items found.
+    </p>
+
+</div>
+
+{% endif %}
+  
+
+</div>
+
+<!-- Invoice Summary -->
+
+<div class="admin-section-card">
+
+  
+<div class="admin-section-header">
+
+    <div>
+
+        <h2>
+            Invoice Summary
+        </h2>
+
+    </div>
+
+</div>
+
+
+<div class="admin-user-details-grid">
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            Subtotal
+        </span>
+
+        <strong>
+            INR {{ "%.2f"|format(invoice["subtotal"]) }}
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item">
+
+        <span>
+            GST
+        </span>
+
+        <strong>
+            INR {{ "%.2f"|format(invoice["gst"]) }}
+        </strong>
+
+    </div>
+
+
+    <div class="admin-user-detail-item admin-user-detail-revenue">
+
+        <span>
+            Grand Total
+        </span>
+
+        <strong>
+            INR {{ "%.2f"|format(invoice["grand_total"]) }}
+        </strong>
+
+    </div>
+
+</div>
+  
+
+</div>
+
+<div class="details-actions">
+
+  
+<a
+    href="/admin/invoices"
+    class="back-btn"
+>
+    ← Back to Invoices
+</a>
+  
+
+</div>
+
+{% endblock %}

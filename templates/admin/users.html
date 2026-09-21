@@ -104,25 +104,12 @@ Users - Admin Dashboard
 
             <tr>
 
-                <th>
-                    S.No.
-                </th>
-
-                <th>
-                    Name
-                </th>
-
-                <th>
-                    Email
-                </th>
-
-                <th>
-                    Role
-                </th>
-
-                <th>
-                    Invoices
-                </th>
+                <th>S.No.</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Invoices</th>
+                <th>Action</th>
 
             </tr>
 
@@ -170,6 +157,16 @@ Users - Admin Dashboard
                 <td>
                     {{ user["invoice_count"] }}
                 </td>
+
+                <td>
+                    <a
+                        href="/admin/users/{{ user['id'] }}"
+                        class="admin-view-btn"
+                    >
+                        View Details
+                    </a>
+                </td>
+
 
             </tr>
 

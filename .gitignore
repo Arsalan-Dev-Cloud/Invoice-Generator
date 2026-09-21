@@ -6,12 +6,9 @@ __pycache__/
 *.pyc
 
 # Database
-invoices.db
+*.db
 
 # Generated invoice PDFs
 invoices/
-
-# Invoice counter
-invoice_counter.txt
 
 .env

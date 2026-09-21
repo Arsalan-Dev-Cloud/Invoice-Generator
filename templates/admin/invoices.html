@@ -130,6 +130,10 @@ Invoices - Admin Dashboard
                     Created By
                 </th>
 
+                <th>
+                    Action
+                </th>
+
             </tr>
 
         </thead>
@@ -177,6 +181,15 @@ Invoices - Admin Dashboard
 
                 <td>
                     {{ invoice["user_name"] }}
+                </td>
+
+                <td> 
+                    
+                    <a 
+                        href="/admin/invoices/{{ invoice['id'] }}" class="admin-view-btn" >
+                        View Details 
+                    </a> 
+
                 </td>
 
             </tr>
