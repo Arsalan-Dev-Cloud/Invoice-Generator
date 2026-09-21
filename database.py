@@ -719,6 +719,26 @@ def get_admin_count():
     return admin_count
 
 
+def get_normal_user_count():
+
+ 
+    connection = sqlite3.connect(DATABASE_NAME)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM users
+        WHERE role = 'user'
+    """)
+
+    normal_user_count = cursor.fetchone()[0]
+
+    connection.close()
+
+    return normal_user_count
+ 
+
+
 if __name__ == "__main__":
     create_database()
 
