@@ -1,304 +1,406 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "admin_layout.html" %}
 
-<head>
+{% block title %}
+Admin Dashboard - Invoice Generator
+{% endblock %}
 
-    <meta charset="UTF-8">
+{% block content %}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Page Header -->
 
-    <title>Admin Dashboard</title>
+<div class="admin-page-header">
 
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='style.css') }}"
-    >
 
-</head>
+<div>
 
+    <h1>
+        Admin Dashboard
+    </h1>
 
-<body>
+    <p>
+        Manage users, invoices and application activity
+    </p>
 
-    <div class="container admin-container">
+</div>
 
-        <!-- Header -->
 
-        <div class="header">
+</div>
 
-            <h1>Admin Dashboard</h1>
+<!-- Welcome Card -->
 
-            <p>
-                Manage users, invoices and application activity
-            </p>
+<div class="admin-welcome-card">
 
-        </div>
 
+    <h2>
+        Welcome, {{ user_name }} 👋
+    </h2>
 
-        <!-- Admin Information -->
+    <p>
+        You are logged in as an administrator.
+    </p>
 
-        <div class="invoice-card">
+</div>
 
-            <h2>Welcome, {{ user_name }} 👋</h2>
+<!-- Statistics -->
 
-            <p>
-                You are logged in as an administrator.
-            </p>
+<div class="admin-stats">
 
-        </div>
+ 
+<!-- Total Accounts -->
 
+    <div class="admin-stat-card">
 
-        <!-- Statistics -->
+        <h3>
+            Total Accounts
+        </h3>
 
-        <div class="admin-stats">
-
-            <div class="admin-stat-card">
-
-                <h3>Total Users</h3>
-
-                <p>
-                    {{ total_users }}
-                </p>
-
-            </div>
-
-
-            <div class="admin-stat-card">
-
-                <h3>Total Invoices</h3>
-
-                <p>
-                    {{ total_invoices }}
-                </p>
-
-            </div>
-
-
-            <div class="admin-stat-card">
-
-                <h3>Total Revenue</h3>
-
-                <p>
-                    INR {{ "%.2f"|format(total_revenue) }}
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- Admin Actions -->
-
-        <div class="invoice-card">
-
-            <h2>Admin Actions</h2>
-
-            <div class="admin-actions">
-
-                <a href="/dashboard" class="back-btn">
-                    User Dashboard
-                </a>
-
-                <a href="/history" class="back-btn">
-                    Invoice History
-                </a>
-
-                <a href="/logout" class="logout-button">
-                    Logout
-                </a>
-
-            </div>
-
-        </div>
-
-        <!-- Users Management -->
-
-        <div class="invoice-card">
-
-            <h2>Users Management</h2>
-
-            <div class="table-container">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Invoices</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        {% for user in users %}
-
-                        <tr>
-
-                            <td>
-                                {{ user["id"] }}
-                            </td>
-
-                            <td>
-                                {{ user["name"] }}
-                            </td>
-
-                            <td>
-                                {{ user["email"] }}
-                            </td>
-
-                            <td>
-                                {{ user["role"] }}
-                            </td>
-
-                            <td>
-                                {{ user["invoice_count"] }}
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        <!-- Invoice Management -->
-
-        <div class="invoice-card">
-
-            <h2>Invoice Management</h2>
-
-            <div class="table-container">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Invoice</th>
-                            <th>Customer</th>
-                            <th>Date</th>
-                            <th>Amount</th>
-                            <th>Created By</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        {% for invoice in invoices %}
-
-                        <tr>
-
-                            <td>
-                                {{ invoice["invoice_number"] }}
-                            </td>
-
-                            <td>
-                                {{ invoice["customer_name"] }}
-                            </td>
-
-                            <td>
-                                {{ invoice["invoice_date"] }}
-                            </td>
-
-                            <td>
-                                INR {{ "%.2f"|format(invoice["grand_total"]) }}
-                            </td>
-
-                            <td>
-                                {{ invoice["user_name"] }}
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-        <!-- Recent Activity -->
-
-        <div class="invoice-card">
-
-            <h2>Recent Activity</h2>
-
-            {% if recent_invoices %}
-
-                {% for invoice in recent_invoices %}
-
-                <div class="recent-activity">
-
-                    <div class="recent-activity-info">
-
-                        <strong>
-                            Invoice {{ invoice["invoice_number"] }}
-                        </strong>
-
-                        <p>
-                            Customer:
-                            {{ invoice["customer_name"] }}
-                        </p>
-
-                        <p>
-                            Created by:
-                            {{ invoice["user_name"] }}
-                        </p>
-
-                    </div>
-
-                    <div class="recent-activity-amount">
-
-                        <strong>
-                            INR {{ "%.2f"|format(invoice["grand_total"]) }}
-                        </strong>
-
-                        <p>
-                            {{ invoice["invoice_date"] }}
-                        </p>
-
-                    </div>
-
-                </div>
-
-                {% endfor %}
-
-            {% else %}
-
-                <p>
-                    No recent activity.
-                </p>
-
-            {% endif %}
-
-        </div>
-
-
-        <!-- Footer -->
-
-        <div class="footer">
-
-            <p>
-                Invoice Generator • Admin Panel
-            </p>
-
-        </div>
+        <p>
+            {{ total_users }}
+        </p>
 
     </div>
 
-</body>
 
-</html>
+    <!-- Normal Users -->
+
+    <div class="admin-stat-card">
+
+        <h3>
+            Normal Users
+        </h3>
+
+        <p>
+            {{ normal_users }}
+        </p>
+
+    </div>
+
+
+    <!-- Administrators -->
+
+    <div class="admin-stat-card">
+
+        <h3>
+            Administrators
+        </h3>
+
+        <p>
+            {{ administrators }}
+        </p>
+
+    </div>
+
+
+    <!-- Total Invoices -->
+
+    <div class="admin-stat-card">
+
+        <h3>
+            Total Invoices
+        </h3>
+
+        <p>
+            {{ total_invoices }}
+        </p>
+
+    </div>
+
+
+    <!-- Total Revenue -->
+
+    <div class="admin-stat-card">
+
+        <h3>
+            Total Revenue
+        </h3>
+
+        <p>
+            INR {{ "%.2f"|format(total_revenue) }}
+        </p>
+
+    </div>
+ 
+
+</div>
+
+
+<!-- Users Management -->
+
+<div
+    class="admin-section-card"
+    id="users"
+>
+
+
+<div class="admin-section-header">
+
+    <div>
+
+        <h2>
+            Users Management
+        </h2>
+
+        <p>
+            View registered users and their invoice activity.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>S.No.</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Invoices</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for user in users %}
+
+            <tr>
+
+                <td>
+                    {{ loop.index }}
+                </td>
+
+                <td>
+                    {{ user["name"] }}
+                </td>
+
+                <td>
+                    {{ user["email"] }}
+                </td>
+
+                <td>
+
+                    <span class="admin-role-badge
+                        {% if user['role'] == 'admin' %}
+                            admin
+                        {% else %}
+                            user
+                        {% endif %}
+                    ">
+
+                        {{ user["role"]|capitalize }}
+
+                    </span>
+
+                </td>
+
+                <td>
+                    {{ user["invoice_count"] }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</div>
+
+<!-- Invoice Management -->
+
+<div
+    class="admin-section-card"
+    id="invoices"
+>
+
+
+<div class="admin-section-header">
+
+    <div>
+
+        <h2>
+            Invoice Management
+        </h2>
+
+        <p>
+            View invoices generated by all users.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Invoice</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Created By</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for invoice in invoices %}
+
+            <tr>
+
+                <td>
+                    {{ invoice["invoice_number"] }}
+                </td>
+
+                <td>
+                    {{ invoice["customer_name"] }}
+                </td>
+
+                <td>
+                    {{ invoice["invoice_date"] }}
+                </td>
+
+                <td>
+
+                    <strong>
+                        INR {{ "%.2f"|format(invoice["grand_total"]) }}
+                    </strong>
+
+                </td>
+
+                <td>
+                    {{ invoice["user_name"] }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+</div>
+
+<!-- Recent Activity -->
+
+<div
+    class="admin-section-card"
+    id="activity"
+>
+
+
+<div class="admin-section-header">
+
+    <div>
+
+        <h2>
+            Recent Activity
+        </h2>
+
+        <p>
+            Latest invoices generated in the system.
+        </p>
+
+    </div>
+
+</div>
+
+
+{% if recent_invoices %}
+
+    <div class="recent-activity-list">
+
+        {% for invoice in recent_invoices %}
+
+            <div class="recent-activity">
+
+                <div class="recent-activity-info">
+
+                    <strong>
+                        Invoice {{ invoice["invoice_number"] }}
+                    </strong>
+
+                    <p>
+                        Customer:
+                        {{ invoice["customer_name"] }}
+                    </p>
+
+                    <p>
+                        Created by:
+                        {{ invoice["user_name"] }}
+                    </p>
+
+                </div>
+
+
+                <div class="recent-activity-amount">
+
+                    <strong>
+                        INR {{ "%.2f"|format(invoice["grand_total"]) }}
+                    </strong>
+
+                    <p>
+                        {{ invoice["invoice_date"] }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div class="admin-empty-state">
+
+        <p>
+            No recent activity.
+        </p>
+
+    </div>
+
+{% endif %}
+
+
+</div>
+
+<!-- Footer -->
+
+<div class="admin-footer">
+
+
+<p>
+    Invoice Generator • Admin Panel
+</p>
+
+
+</div>
+
+{% endblock %}
