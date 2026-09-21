@@ -28,7 +28,9 @@ from database import (
     get_invoice_details_admin,
     get_deleted_invoices,
     restore_invoice,
-    permanently_delete_invoice
+    permanently_delete_invoice,
+    log_activity,
+    get_recent_activity
 )
 
 
@@ -253,7 +255,7 @@ def generate_invoice():
         prices
     )
 
-
+    
     # -----------------------------
     # Save Invoice to Database
     # -----------------------------
@@ -275,6 +277,11 @@ def generate_invoice():
         prices
     )
 
+    log_activity(
+            session["user_id"],
+            "invoice_created",
+            f"Invoice {invoice_number} created"
+        )
 
     # -----------------------------
     # Download PDF
@@ -330,9 +337,30 @@ def restore_invoice_route(invoice_id):
     if "user_id" not in session:
         return redirect("/login")
 
+    user_id = session["user_id"]
+
+    deleted_invoices = get_deleted_invoices(user_id)
+
+    invoice = None
+
+    for deleted_invoice in deleted_invoices:
+
+        if deleted_invoice["id"] == invoice_id:
+            invoice = deleted_invoice
+            break
+
+    if invoice is None:
+        return redirect("/trash")
+
     restore_invoice(
         invoice_id,
-        session["user_id"]
+        user_id
+    )
+
+    log_activity(
+        user_id,
+        "invoice_restored",
+        f"Invoice {invoice['invoice_number']} restored from trash"
     )
 
     return redirect("/trash")
@@ -367,6 +395,12 @@ def permanent_delete_invoice_route(invoice_id):
     permanently_delete_invoice(
         invoice_id,
         user_id
+    )
+
+    log_activity(
+        user_id,
+        "invoice_permanently_deleted",
+        f"Invoice {invoice['invoice_number']} permanently deleted"
     )
 
     if os.path.exists(pdf_path):
@@ -435,6 +469,12 @@ def delete_invoice_route(invoice_id):
         delete_invoice(
             invoice_id,
             session["user_id"]
+        )
+
+        log_activity(
+            session["user_id"],
+            "invoice_deleted",
+            f"Invoice {invoice['invoice_number']} moved to trash"
         )
 
     return redirect("/history")
@@ -751,11 +791,11 @@ def admin_activity():
         flash("Access denied.")
         return redirect("/dashboard")
 
-    recent_invoices = get_recent_invoices(20)
+    activities = get_recent_activity(20)
 
     return render_template(
         "admin/activity.html",
-        recent_invoices=recent_invoices
+        activities=activities
     )
 
 

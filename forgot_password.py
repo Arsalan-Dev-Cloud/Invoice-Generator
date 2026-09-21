@@ -6,7 +6,8 @@ from database import (
     create_password_reset_token,
     get_password_reset_token,
     mark_reset_token_used,
-    update_user_password
+    update_user_password,
+    log_activity
 )
 
 import secrets
@@ -158,6 +159,12 @@ def reset_password(token):
         update_user_password(
             reset_token["user_id"],
             hashed_password
+        )
+
+        log_activity(
+            reset_token["user_id"],
+            "password_reset",
+            "User reset their password"
         )
 
         # Mark token as used

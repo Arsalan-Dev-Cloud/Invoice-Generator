@@ -415,6 +415,17 @@ def create_database():
                 last_number or 0
             ))
 
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS activity_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    action TEXT NOT NULL,
+                    description TEXT NOT NULL,
+                    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                )
+            """)
+
         # -------------------------------------------------
         # Commit changes
         # -------------------------------------------------
@@ -1296,7 +1307,61 @@ def get_invoice_details_admin(invoice_id):
         "invoice": invoice,
         "items": items
     }
-  
+
+
+def log_activity(user_id, action, description):
+
+    connection = sqlite3.connect(DATABASE_NAME)
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        INSERT INTO activity_logs (
+            user_id,
+            action,
+            description
+        )
+        VALUES (?, ?, ?)
+    """, (
+        user_id,
+        action,
+        description
+    ))
+
+    connection.commit()
+
+    connection.close()
+
+
+def get_recent_activity(limit=20):
+
+    connection = sqlite3.connect(DATABASE_NAME)
+
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT
+            activity_logs.id,
+            activity_logs.action,
+            activity_logs.description,
+            activity_logs.created_at,
+            users.name AS user_name,
+            users.email AS user_email
+        FROM activity_logs
+        LEFT JOIN users
+            ON activity_logs.user_id = users.id
+        ORDER BY activity_logs.id DESC
+        LIMIT ?
+    """, (limit,))
+
+    activities = cursor.fetchall()
+
+    connection.close()
+
+    return activities
+
 
 if __name__ == "__main__":
 

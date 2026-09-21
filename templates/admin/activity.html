@@ -31,17 +31,17 @@ Activity - Admin Dashboard
 <div class="admin-stats">
 
   
-<div class="admin-stat-card">
+    <div class="admin-stat-card">
 
-    <h3>
-        Recent Invoices
-    </h3>
+        <h3>
+            Recent Activities
+        </h3>
 
-    <p>
-        {{ recent_invoices|length }}
-    </p>
+        <p>
+            {{ activities|length }}
+        </p>
 
-</div>
+    </div>
   
 
 </div>
@@ -60,7 +60,7 @@ Activity - Admin Dashboard
         </h2>
 
         <p>
-            The 20 most recent invoices generated in the system.
+            The 20 most recent activities across the system.
         </p>
 
     </div>
@@ -68,42 +68,60 @@ Activity - Admin Dashboard
 </div>
 
 
-{% if recent_invoices %}
+{% if activities %}
 
     <div class="recent-activity-list">
 
-        {% for invoice in recent_invoices %}
+        {% for activity in activities %}
 
             <div class="recent-activity">
 
                 <div class="recent-activity-info">
 
                     <strong>
-                        Invoice {{ invoice["invoice_number"] }}
+                        {% if activity["action"] == "login" %}
+                            User Login
+
+                        {% elif activity["action"] == "invoice_created" %}
+                            Invoice Created
+
+                        {% elif activity["action"] == "invoice_deleted" %}
+                            Invoice Moved to Trash
+
+                        {% elif activity["action"] == "invoice_restored" %}
+                            Invoice Restored
+
+                        {% elif activity["action"] == "invoice_permanently_deleted" %}
+                            Invoice Permanently Deleted
+
+                        {% elif activity["action"] == "password_reset" %}
+                            Password Reset
+
+                        {% else %}
+                            {{ activity["action"] }}
+                        {% endif %}
                     </strong>
 
                     <p>
-                        Customer:
-                        {{ invoice["customer_name"] }}
+                        {{ activity["description"] }}
                     </p>
 
                     <p>
-                        Created by:
-                        {{ invoice["user_name"] }}
+                        User:
+                        {{ activity["user_name"] }}
+                        ({{ activity["user_email"] }})
                     </p>
 
                 </div>
 
-
                 <div class="recent-activity-amount">
 
                     <strong>
-                        INR
-                        {{ "%.2f"|format(invoice["grand_total"]) }}
+                        Activity #{{ activity["id"] }}
                     </strong>
 
                     <p>
-                        {{ invoice["invoice_date"] }}
+                        {{ activity["created_at"] }}
                     </p>
 
                 </div>
