@@ -581,7 +581,7 @@ def admin_dashboard():
     recent_invoices = get_recent_invoices()
 
     return render_template(
-        "admin.html",
+        "admin/overview.html",
         user_name=session["user_name"],
         total_users=total_users,
         normal_users=normal_users,
@@ -592,6 +592,62 @@ def admin_dashboard():
         invoices=invoices,
         recent_invoices=recent_invoices
     )
+
+
+@app.route("/admin/users")
+def admin_users():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("user_role") != "admin":
+        flash("Access denied.")
+        return redirect("/dashboard")
+
+    users = get_all_users()
+    
+    return render_template(
+        "admin/users.html",
+        users=users
+    )
+
+
+
+@app.route("/admin/invoices")
+def admin_invoices():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("user_role") != "admin":
+        flash("Access denied.")
+        return redirect("/dashboard")
+
+    invoices = get_all_invoices_admin()
+
+    return render_template(
+        "admin/invoices.html",
+        invoices=invoices
+    )
+
+
+@app.route("/admin/activity")
+def admin_activity():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("user_role") != "admin":
+        flash("Access denied.")
+        return redirect("/dashboard")
+
+    recent_invoices = get_recent_invoices(20)
+
+    return render_template(
+        "admin/activity.html",
+        recent_invoices=recent_invoices
+    )
+
 
 
 if __name__ == "__main__":
