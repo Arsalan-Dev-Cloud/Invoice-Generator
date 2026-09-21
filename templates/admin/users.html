@@ -1,0 +1,214 @@
+{% extends "admin/admin_layout.html" %}
+
+{% block title %}
+Users - Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+
+<div class="admin-page-header">
+
+ 
+<div>
+
+    <h1>
+        Users Management
+    </h1>
+
+    <p>
+        View and manage all registered accounts.
+    </p>
+
+</div>
+  
+
+</div>
+
+<!-- Users Statistics -->
+
+<div class="admin-stats">
+
+
+<div class="admin-stat-card">
+
+    <h3>
+        Total Accounts
+    </h3>
+
+    <p>
+        {{ users|length }}
+    </p>
+
+</div>
+
+
+<div class="admin-stat-card">
+
+    <h3>
+        Normal Users
+    </h3>
+
+    <p>
+        {{ users|selectattr("role", "equalto", "user")|list|length }}
+    </p>
+
+</div>
+
+
+<div class="admin-stat-card">
+
+    <h3>
+        Administrators
+    </h3>
+
+    <p>
+        {{ users|selectattr("role", "equalto", "admin")|list|length }}
+    </p>
+
+</div>
+  
+
+</div>
+
+<!-- Users Table -->
+
+<div class="admin-section-card">  
+
+  
+<div class="admin-section-header">
+
+    <div>
+
+        <h2>
+            Registered Accounts
+        </h2>
+
+        <p>
+            All accounts currently registered in the system.
+        </p>
+
+    </div>
+
+</div>
+
+
+{% if users %}
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    S.No.
+                </th>
+
+                <th>
+                    Name
+                </th>
+
+                <th>
+                    Email
+                </th>
+
+                <th>
+                    Role
+                </th>
+
+                <th>
+                    Invoices
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for user in users %}
+
+            <tr>
+
+                <td>
+                    {{ loop.index }}
+                </td>
+
+
+                <td>
+                    {{ user["name"] }}
+                </td>
+
+
+                <td>
+                    {{ user["email"] }}
+                </td>
+
+
+                <td>
+
+                    <span class="admin-role-badge
+                        {% if user['role'] == 'admin' %}
+                            admin
+                        {% else %}
+                            user
+                        {% endif %}
+                    ">
+
+                        {{ user["role"]|capitalize }}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+                    {{ user["invoice_count"] }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% else %}
+
+<div class="admin-empty-state">
+
+    <p>
+        No registered accounts found.
+    </p>
+
+</div>
+
+{% endif %}
+  
+
+</div>
+
+<!-- Back to Overview -->
+
+<div class="details-actions">
+
+      
+<a
+    href="/admin"
+    class="back-btn"
+>
+    ← Back to Overview
+</a>
+ 
+
+</div>
+
+{% endblock %}

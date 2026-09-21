@@ -1,0 +1,147 @@
+{% extends "admin/admin_layout.html" %}
+
+{% block title %}
+Activity - Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+
+<div class="admin-page-header">
+
+  
+<div>
+
+    <h1>
+        Recent Activity
+    </h1>
+
+    <p>
+        Monitor the latest invoice activity across the system.
+    </p>
+
+</div>
+  
+
+</div>
+
+<!-- Activity Summary -->
+
+<div class="admin-stats">
+
+  
+<div class="admin-stat-card">
+
+    <h3>
+        Recent Invoices
+    </h3>
+
+    <p>
+        {{ recent_invoices|length }}
+    </p>
+
+</div>
+  
+
+</div>
+
+<!-- Activity List -->
+
+<div class="admin-section-card">
+
+  
+<div class="admin-section-header">
+
+    <div>
+
+        <h2>
+            Latest Activity
+        </h2>
+
+        <p>
+            The 20 most recent invoices generated in the system.
+        </p>
+
+    </div>
+
+</div>
+
+
+{% if recent_invoices %}
+
+    <div class="recent-activity-list">
+
+        {% for invoice in recent_invoices %}
+
+            <div class="recent-activity">
+
+                <div class="recent-activity-info">
+
+                    <strong>
+                        Invoice {{ invoice["invoice_number"] }}
+                    </strong>
+
+                    <p>
+                        Customer:
+                        {{ invoice["customer_name"] }}
+                    </p>
+
+                    <p>
+                        Created by:
+                        {{ invoice["user_name"] }}
+                    </p>
+
+                </div>
+
+
+                <div class="recent-activity-amount">
+
+                    <strong>
+                        INR
+                        {{ "%.2f"|format(invoice["grand_total"]) }}
+                    </strong>
+
+                    <p>
+                        {{ invoice["invoice_date"] }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div class="admin-empty-state">
+
+        <p>
+            No recent activity found.
+        </p>
+
+    </div>
+
+{% endif %}
+  
+
+</div>
+
+<!-- Back to Overview -->
+
+<div class="details-actions">
+
+  
+<a
+    href="/admin"
+    class="back-btn"
+>
+    ← Back to Overview
+</a>
+  
+
+</div>
+
+{% endblock %}
