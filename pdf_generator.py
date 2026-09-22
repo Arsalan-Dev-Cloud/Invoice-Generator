@@ -69,11 +69,13 @@ def create_invoice_pdf(
     invoice_number = get_next_invoice_number(user_id)
     invoice_date = datetime.now().strftime("%d-%m-%Y")
 
+    os.makedirs("invoices", exist_ok=True)
+
     file_name = os.path.join(
         "invoices",
         f"user_{user_id}_{invoice_number}.pdf"
     )
-
+    
     pdf = canvas.Canvas(file_name, pagesize=A4)
 
     width, height = A4
