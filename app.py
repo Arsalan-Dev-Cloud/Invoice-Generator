@@ -592,6 +592,7 @@ def profile():
     )
 
     print("PROFILE USER:", dict(user) if user else None)
+    print("PROFILE EMAIL:", session.get("user_email"))
 
     return render_template(
         "profile.html",
