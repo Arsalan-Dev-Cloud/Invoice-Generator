@@ -7,54 +7,64 @@ from datetime import datetime
 
 def get_next_invoice_number(user_id):
 
-    import sqlite3
+    from database import get_connection, release_connection
 
-    connection = sqlite3.connect("invoices.db")
-
+    connection = get_connection()
     cursor = connection.cursor()
 
-    # Get the last invoice number used by this user
-    cursor.execute("""
-        SELECT last_invoice_number
-        FROM invoice_counters
-        WHERE user_id = ?
-    """, (user_id,))
+    try:
 
-    result = cursor.fetchone()
-
-    if result is None:
-
-        number = 1
-
+        # Get the last invoice number used by this user
         cursor.execute("""
-            INSERT INTO invoice_counters (
+            SELECT last_invoice_number
+            FROM invoice_counters
+            WHERE user_id = %s
+        """, (user_id,))
+
+        result = cursor.fetchone()
+
+        if result is None:
+
+            number = 1
+
+            cursor.execute("""
+                INSERT INTO invoice_counters (
+                    user_id,
+                    last_invoice_number
+                )
+                VALUES (%s, %s)
+            """, (
                 user_id,
-                last_invoice_number
-            )
-            VALUES (?, ?)
-        """, (
-            user_id,
-            number
-        ))
+                number
+            ))
 
-    else:
+        else:
 
-        number = result[0] + 1
+            number = result["last_invoice_number"] + 1
 
-        cursor.execute("""
-            UPDATE invoice_counters
-            SET last_invoice_number = ?
-            WHERE user_id = ?
-        """, (
-            number,
-            user_id
-        ))
+            cursor.execute("""
+                UPDATE invoice_counters
+                SET last_invoice_number = %s
+                WHERE user_id = %s
+            """, (
+                number,
+                user_id
+            ))
 
-    connection.commit()
+        connection.commit()
 
-    connection.close()
+        return f"INV-{number:03d}"
 
-    return f"INV-{number:03d}"
+    except Exception:
+
+        connection.rollback()
+
+        raise
+
+    finally:
+
+        cursor.close()
+        release_connection(connection)
 
 def create_invoice_pdf(
     user_id,

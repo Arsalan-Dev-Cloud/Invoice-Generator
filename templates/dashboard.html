@@ -226,14 +226,14 @@ const monthlyData = JSON.parse(
 
 const months = Array.isArray(monthlyData)
     ? monthlyData.map(
-        row => row[0]
+        row => row.month
     )
     : [];
 
 
 const revenue = Array.isArray(monthlyData)
     ? monthlyData.map(
-        row => Number(row[2]) || 0
+        row => Number(row.total_revenue) || 0
     )
     : [];
 

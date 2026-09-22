@@ -73,12 +73,12 @@ const productData = JSON.parse(
 
 
 const products = Array.isArray(productData)
-    ? productData.map(row => row[0])
+    ? productData.map(row => row.product_name)
     : [];
 
 
 const quantities = Array.isArray(productData)
-    ? productData.map(row => Number(row[1]) || 0)
+    ? productData.map(row => Number(row.total_quantity) || 0)
     : [];
 
 
