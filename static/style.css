@@ -1791,3 +1791,412 @@ tr:hover {
         text-align: left;
     }
 }
+
+/* =========================================================
+   MOBILE RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    /* =========================
+       GLOBAL
+       ========================= */
+
+    body {
+        padding: 20px 12px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* =========================
+       BASIC INVOICE CARD
+       ========================= */
+
+    .invoice-card {
+        padding: 20px 15px;
+        border-radius: 10px;
+    }
+
+    .header {
+        margin-bottom: 20px;
+    }
+
+    .header h1 {
+        font-size: 26px;
+    }
+
+    .header p {
+        font-size: 14px;
+    }
+
+    /* =========================
+       INVOICE ITEMS
+       ========================= */
+
+    .item-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        align-items: stretch;
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #fafafa;
+    }
+
+    .delete-item-btn {
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    .add-item-btn {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    /* =========================
+       INVOICE DETAILS
+       ========================= */
+
+    .invoice-summary {
+        max-width: 100%;
+        margin-left: 0;
+    }
+
+    .invoice-summary p {
+        text-align: right;
+    }
+
+    .details-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .details-actions .back-btn,
+    .details-actions .download-btn {
+        width: 100%;
+        text-align: center;
+        margin-right: 0;
+    }
+
+    /* =========================
+       TABLES
+       ========================= */
+
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 600px;
+    }
+
+    /* =========================
+       USER APPLICATION
+       ========================= */
+
+    .app-layout {
+        display: block;
+    }
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        padding: 15px;
+    }
+
+    .sidebar-logo {
+        padding: 5px 10px 15px;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-logo h2 {
+        font-size: 20px;
+    }
+
+    .sidebar-nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+
+    .sidebar-bottom {
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+
+    /* =========================
+       PAGE HEADER
+       ========================= */
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+    }
+
+    .page-header p {
+        font-size: 14px;
+    }
+
+    /* =========================
+       DASHBOARD
+       ========================= */
+
+    .statistics-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .statistics-card {
+        padding: 18px;
+    }
+
+    .statistics-card p {
+        font-size: 24px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .dashboard-card {
+        padding: 18px;
+    }
+
+    /* =========================
+       CHARTS
+       ========================= */
+
+    .chart-container {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    /* =========================
+       ACCOUNT DANGER ZONE
+       ========================= */
+
+    .account-danger-zone {
+        padding: 18px;
+    }
+
+    .delete-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* =========================
+       ADMIN APPLICATION
+       ========================= */
+
+    .admin-app-layout {
+        display: block;
+    }
+
+    .admin-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        padding: 15px;
+    }
+
+    .admin-sidebar-logo {
+        padding: 5px 10px 15px;
+        margin-bottom: 15px;
+    }
+
+    .admin-sidebar-logo h2 {
+        font-size: 20px;
+    }
+
+    .admin-sidebar-nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+
+    .admin-sidebar-bottom {
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+
+    .admin-main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+
+    /* =========================
+       ADMIN HEADER
+       ========================= */
+
+    .admin-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .admin-page-header h1 {
+        font-size: 24px;
+    }
+
+    /* =========================
+       ADMIN STATISTICS
+       ========================= */
+
+    .admin-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .admin-stat-card {
+        padding: 18px;
+    }
+
+    /* =========================
+       ADMIN SECTION CARDS
+       ========================= */
+
+    .admin-section-card {
+        padding: 18px;
+    }
+
+    .admin-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    /* =========================
+       ADMIN TABLES
+       ========================= */
+
+    .admin-section-card .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-section-card table {
+        min-width: 650px;
+    }
+
+    /* =========================
+       ADMIN USER DETAILS
+       ========================= */
+
+    .admin-user-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-user-detail-revenue {
+        grid-column: auto;
+    }
+
+    /* =========================
+       ADMIN QUICK ACCESS
+       ========================= */
+
+    .admin-quick-access {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+}
+
+
+/* =========================================================
+   EXTRA SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    body {
+        padding: 12px 8px;
+    }
+
+    .main-content,
+    .admin-main-content {
+        padding: 10px;
+    }
+
+    .invoice-card {
+        padding: 16px 12px;
+    }
+
+    .header h1 {
+        font-size: 23px;
+    }
+
+    .statistics-card,
+    .dashboard-card,
+    .admin-stat-card,
+    .admin-section-card,
+    .admin-welcome-card {
+        padding: 15px;
+    }
+
+    .sidebar-nav,
+    .admin-sidebar-nav {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar-nav a,
+    .sidebar-bottom a,
+    .admin-sidebar-nav a,
+    .admin-sidebar-bottom a {
+        padding: 11px;
+    }
+
+    .hero-content h1 {
+        font-size: 32px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .landing-nav-links {
+        width: 100%;
+    }
+
+    .landing-nav-links a {
+        font-size: 13px;
+    }
+
+    .feature-card,
+    .step-card {
+        padding: 20px;
+    }
+
+    .about-tech {
+        grid-template-columns: 1fr;
+    }
+
+}
