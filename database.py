@@ -412,21 +412,31 @@ def permanently_delete_invoice(invoice_id, user_id):
 
     try:
 
+        # Get Cloudinary public ID before deleting the invoice
+        cursor.execute("""
+            SELECT pdf_public_id
+            FROM invoices
+            WHERE id = %s
+              AND user_id = %s
+              AND deleted = 1
+        """, (
+            invoice_id,
+            user_id
+        ))
+
+        invoice = cursor.fetchone()
+
+        if invoice is None:
+            return None
+
+        pdf_public_id = invoice["pdf_public_id"]
+
         # Delete invoice items first
         cursor.execute("""
             DELETE FROM invoice_items
             WHERE invoice_id = %s
-              AND invoice_id IN (
-                  SELECT id
-                  FROM invoices
-                  WHERE id = %s
-                    AND user_id = %s
-                    AND deleted = 1
-              )
         """, (
             invoice_id,
-            invoice_id,
-            user_id
         ))
 
         # Delete invoice
@@ -443,6 +453,8 @@ def permanently_delete_invoice(invoice_id, user_id):
         connection.commit()
 
         print("Invoice permanently deleted!")
+
+        return pdf_public_id
 
     except Exception:
 

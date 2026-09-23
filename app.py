@@ -395,24 +395,34 @@ def permanent_delete_invoice_route(invoice_id):
     if invoice is None:
         return redirect("/trash")
 
-    pdf_path = os.path.join(
-        "invoices",
-        f"user_{user_id}_{invoice['invoice_number']}.pdf"
-    )
-
-    permanently_delete_invoice(
+    # Permanently delete invoice from PostgreSQL
+    pdf_public_id = permanently_delete_invoice(
         invoice_id,
         user_id
     )
+
+    # Delete PDF from Cloudinary
+    if pdf_public_id:
+
+        try:
+
+            cloudinary.uploader.destroy(
+                pdf_public_id,
+                resource_type="raw",
+                type="authenticated"
+            )
+
+            print("Invoice PDF deleted from Cloudinary!")
+
+        except Exception as e:
+
+            print("Cloudinary deletion failed:", e)
 
     log_activity(
         user_id,
         "invoice_permanently_deleted",
         f"Invoice {invoice['invoice_number']} permanently deleted"
     )
-
-    if os.path.exists(pdf_path):
-        os.remove(pdf_path)
 
     return redirect("/trash")
 
