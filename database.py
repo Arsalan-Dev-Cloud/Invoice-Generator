@@ -129,6 +129,11 @@ def create_database():
         )
     """)
 
+    cursor.execute("""
+        ALTER TABLE invoices
+        ADD COLUMN IF NOT EXISTS pdf_public_id TEXT
+    """)
+
 
     # -------------------------------------------------
     # Invoice items table
@@ -1292,6 +1297,35 @@ def get_recent_activity(limit=20):
         """, (limit,))
 
         return cursor.fetchall()
+
+    finally:
+
+        cursor.close()
+        release_connection(connection)
+
+def update_invoice_pdf_public_id(invoice_id, pdf_public_id):
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+
+        cursor.execute("""
+            UPDATE invoices
+            SET pdf_public_id = %s
+            WHERE id = %s
+        """, (
+            pdf_public_id,
+            invoice_id
+        ))
+
+        connection.commit()
+
+    except Exception:
+
+        connection.rollback()
+
+        raise
 
     finally:
 

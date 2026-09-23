@@ -1,13 +1,14 @@
 import os
 
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask import Flask, render_template, request, send_file, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash
 from dotenv import load_dotenv
 from pdf_generator import create_invoice_pdf
 
 from database import (
     create_database,
     save_invoice,
+    update_invoice_pdf_public_id,
     get_all_invoices,
     get_invoice_details,
     delete_invoice,
@@ -19,7 +20,6 @@ from database import (
     get_total_revenue,
     get_all_users,
     get_all_invoices_admin,
-    get_recent_invoices,
     delete_user_account,
     update_user_name,
     get_admin_count,
@@ -42,9 +42,30 @@ from forgot_password import forgot_password, reset_password
 
 load_dotenv()
 
+import cloudinary
+import cloudinary.uploader
+import cloudinary.utils
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+)
+
 app = Flask(__name__)
 
 app.secret_key = os.getenv("SECRET_KEY")
+
+def upload_invoice_to_cloudinary(file_path, user_id, invoice_number):
+
+    upload_result = cloudinary.uploader.upload(
+        file_path,
+        resource_type="raw",
+        folder="invoice_generator/invoices",
+        public_id=f"user_{user_id}_{invoice_number}"
+    )
+
+    return upload_result["public_id"]
 
 @app.after_request
 def add_security_headers(response):
@@ -263,7 +284,7 @@ def generate_invoice():
     invoice_date = datetime.now().strftime("%d-%m-%Y")
 
 
-    save_invoice(
+    invoice_id = save_invoice(
         session["user_id"],
         invoice_number,
         customer_name,
@@ -277,23 +298,33 @@ def generate_invoice():
         prices
     )
 
-    log_activity(
-            session["user_id"],
-            "invoice_created",
-            f"Invoice {invoice_number} created"
-        )
-
     # -----------------------------
-    # Download PDF
+    # Upload PDF to Cloudinary
     # -----------------------------
 
-    return send_file(
-
+    pdf_public_id = upload_invoice_to_cloudinary(
         file_name,
-
-        as_attachment=True
-
+        session["user_id"],
+        invoice_number
     )
+
+    # -----------------------------
+    # Save Cloudinary ID to database
+    # -----------------------------
+
+    update_invoice_pdf_public_id(
+        invoice_id,
+        pdf_public_id
+    )
+
+    log_activity(
+        session["user_id"],
+        "invoice_created",
+        f"Invoice {invoice_number} created"
+    )
+
+    return redirect(f"/invoice/{invoice_id}")
+
 
 @app.route("/history")
 def invoice_history():
@@ -443,14 +474,20 @@ def download_invoice(invoice_id):
     if invoice is None:
         return redirect("/history")
 
-    invoice_number = invoice["invoice_number"]
+    pdf_public_id = invoice["pdf_public_id"]
 
-    file_path = f"invoices/user_{session['user_id']}_{invoice_number}.pdf"
+    if not pdf_public_id:
+        return redirect(f"/invoice/{invoice_id}")
 
-    return send_file(
-        file_path,
-        as_attachment=True
+    download_url, options = cloudinary.utils.cloudinary_url(
+        pdf_public_id,
+        resource_type="raw",
+        type="upload",
+        secure=True,
+        flags="attachment"
     )
+
+    return redirect(download_url)
 
 
 @app.route("/invoice/<int:invoice_id>/delete", methods=["POST"])
