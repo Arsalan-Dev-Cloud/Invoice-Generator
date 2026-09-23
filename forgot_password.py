@@ -12,10 +12,9 @@ from database import (
 
 import secrets
 import os
-import smtplib
+import resend
 
 from datetime import datetime, timedelta
-from email.message import EmailMessage
 from dotenv import load_dotenv
 
 
@@ -24,13 +23,13 @@ load_dotenv()
 
 def send_reset_email(email, reset_link):
 
-    message = EmailMessage()
+    resend.api_key = os.getenv("RESEND_API_KEY")
 
-    message["Subject"] = "Invoice Generator - Password Reset"
-    message["From"] = os.getenv("MAIL_USERNAME")
-    message["To"] = email
-
-    message.set_content(f"""
+    params = {
+        "from": "onboarding@resend.dev",
+        "to": [email],
+        "subject": "Invoice Generator - Password Reset",
+        "text": f"""
 Hello,
 
 You requested a password reset for your Invoice Generator account.
@@ -45,18 +44,10 @@ If you did not request this password reset, you can safely ignore this email.
 
 Regards,
 Invoice Generator
-""")
+"""
+    }
 
-    with smtplib.SMTP("smtp.gmail.com", 587) as server:
-
-        server.starttls()
-
-        server.login(
-            os.getenv("MAIL_USERNAME"),
-            os.getenv("MAIL_PASSWORD")
-        )
-
-        server.send_message(message)
+    resend.Emails.send(params)
 
 
 def forgot_password():
