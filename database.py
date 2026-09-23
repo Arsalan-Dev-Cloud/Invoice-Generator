@@ -1155,15 +1155,6 @@ def delete_user_account(user_id):
 
     try:
 
-        # Get invoice numbers before deleting records
-        cursor.execute("""
-            SELECT invoice_number
-            FROM invoices
-            WHERE user_id = %s
-        """, (user_id,))
-
-        invoices = cursor.fetchall()
-
         # Delete invoice items first
         cursor.execute("""
             DELETE FROM invoice_items
@@ -1205,18 +1196,6 @@ def delete_user_account(user_id):
         """, (user_id,))
 
         connection.commit()
-
-        # Delete generated invoice PDFs
-        for invoice in invoices:
-
-            invoice_number = invoice["invoice_number"]
-
-            file_path = (
-                f"invoices/user_{user_id}_{invoice_number}.pdf"
-            )
-
-            if os.path.exists(file_path):
-                os.remove(file_path)
 
         print("User account deleted successfully!")
 
