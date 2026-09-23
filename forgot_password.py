@@ -84,10 +84,14 @@ def forgot_password():
             )
 
             # Send reset email
-            send_reset_email(
-                email,
-                reset_link
-            )
+            try:
+                send_reset_email(
+                    email,
+                    reset_link
+                )
+
+            except Exception as e:
+                print("Password reset email failed:", e)
 
         flash(
             "If an account exists with this email, "
