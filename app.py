@@ -61,11 +61,13 @@ def upload_invoice_to_cloudinary(file_path, user_id, invoice_number):
     upload_result = cloudinary.uploader.upload(
         file_path,
         resource_type="raw",
+        type="authenticated",
         folder="invoice_generator/invoices",
         public_id=f"user_{user_id}_{invoice_number}"
     )
 
     return upload_result["public_id"]
+
 
 @app.after_request
 def add_security_headers(response):
@@ -482,8 +484,9 @@ def download_invoice(invoice_id):
     download_url, options = cloudinary.utils.cloudinary_url(
         pdf_public_id,
         resource_type="raw",
-        type="upload",
+        type="authenticated",
         secure=True,
+        sign_url=True,
         flags="attachment"
     )
 
