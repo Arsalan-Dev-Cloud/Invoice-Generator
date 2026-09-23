@@ -213,13 +213,6 @@ def generate_invoice():
     # Calculate Subtotal
     # -----------------------------
 
-    print("\n----- INVOICE DATA -----")
-
-    print("Customer Name :", customer_name)
-    print("Customer Email:", customer_email)
-
-    print("\nItems:")
-
     subtotal = 0
 
 
@@ -235,20 +228,7 @@ def generate_invoice():
 
         subtotal += item_total
 
-
-        print("-------------------------")
-
-        print("Product :", product)
-        print("Quantity:", quantity)
-        print("Price   :", price)
-        print("Total   :", item_total)
-
-
-    print("-------------------------")
-
-    print("Subtotal:", subtotal)
-
-
+        
     # -----------------------------
     # GST Calculation
     # -----------------------------
@@ -258,11 +238,6 @@ def generate_invoice():
     gst_amount = subtotal * gst_rate / 100
 
     final_total = subtotal + gst_amount
-
-
-    print("GST:", gst_amount)
-
-    print("Grand Total:", final_total)
 
 
     # -----------------------------
